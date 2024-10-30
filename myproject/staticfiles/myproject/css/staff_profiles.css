@@ -1,0 +1,153 @@
+/* staff_profiles.css */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  overflow: hidden;
+  margin-top: 130px;
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  padding: 20px;
+  text-align: center;
+}
+
+.profile-card img {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.profile-card h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.profile-card p {
+  color: #777;
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.profile-card .social-links {
+  margin-top: 20px;
+}
+
+.profile-card .social-links a {
+  text-decoration: none;
+  color: #333;
+  margin: 0 10px;
+  font-size: 20px;
+}
+
+.profile-card .social-links a:hover {
+  color: #007BFF;
+  margin-top: 130px;
+}
+
+.profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.profile-card {
+  flex: 0 0 23%;
+  box-sizing: border-box;
+}
+
+header {
+  position: fixed; /* Fixes the header at the top */
+  top: 0; /* Positions the header at the top of the page */
+  left: 0; /* Aligns the header to the left */
+  right: 0; /* Aligns the header to the right */
+  z-index: 1000; /* Ensures the header is above other elements */
+  background-color: #C4DFE6; /* Optional: Set a background color */
+}
+
+header {
+  background-color:#66A5AD; /* Set the background color of the header */
+  color: #fff; /* Set the text color to white */
+  padding: 10px 0; /* Add padding to the top and bottom of the header */
+}
+
+header .u-sheet-1 {
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between;     /* Space out the items */
+  align-items: center;            /* Center align items vertically */ 
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 20px;
+}
+.u-section-1 {
+  background-color: #C4DFE6; /* Change this to your desired background color */
+}
+
+header {
+  padding: 1px 0; /* Reduce padding to decrease the size of the header */
+  font-size: 0.875rem; /* Optional: Reduce font size for a smaller header */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 10px;
+  width: 60%;
+  max-width: 800px;
+  margin: auto;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Staff Details Box Layout */
+.staff-details-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.staff-details-box div {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.staff-details-box div strong {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+h2#staffName {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,92 @@
+/* pay_slip.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #C4DFE6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 60px auto;
+    background: #ffffff;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: 50px;
+}
+
+h1 {
+    text-align: center;
+    color: #000000;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #000000;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #66A5AD;
+    color: #333;
+}
+
+tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+tr:hover {
+    background-color: #ffffff;
+}
+
+button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: none;
+    background-color: #66A5AD;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #C4DFE6;
+}
+
+header {
+    position: fixed; /* Fixes the header at the top */
+    top: 0; /* Positions the header at the top of the page */
+    left: 0; /* Aligns the header to the left */
+    right: 0; /* Aligns the header to the right */
+    z-index: 1000; /* Ensures the header is above other elements */
+    background-color: #C4DFE6; /* Optional: Set a background color */
+}
+
+header {
+    background-color:#66A5AD; /* Set the background color of the header */
+    color: #fff; /* Set the text color to white */
+    padding: 10px 0; /* Add padding to the top and bottom of the header */
+}
+
+header .u-sheet-1 {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between;     /* Space out the items */
+    align-items: center;            /* Center align items vertically */ 
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 20px;
+}

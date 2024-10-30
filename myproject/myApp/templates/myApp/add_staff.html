@@ -1,0 +1,111 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Staff</title>
+    <link rel="stylesheet" href="{% static 'myproject/css/add_staff.css' %}">
+
+    
+</head>   
+<body>
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 20px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
+                <nav style="float: right;">
+                    <a href="{% url 'myApp:home' %}" style="margin-left: 1100px; top: 10px;">
+                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
+                    </a>
+                </nav>
+        </div>
+        </header>
+    <div class="form-container">
+        <h1>NEW STAFF REGISTRATION</h1>
+        <form action="{% url 'myApp:add_staff' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Personal Details Section -->
+            <fieldset>
+                <legend>Upload Photo</legend>
+                <label for="photo">Photo:</label>
+                <input type="file" id="photo" name="photo"><br>
+            </fieldset>
+            
+            <fieldset>
+                <legend>Personal Details</legend>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br>
+
+                <label for="designation">Designation:</label>
+                <input type="text" id="designation" name="designation" required><br>
+
+                <label for="qualification">Qualification:</label>
+                <input type="text" id="qualification" name="qualification"><br>
+
+                <label for="joining-date">Date of Joining:</label>
+                <input type="date" id="joining-date" name="joining_date"><br>
+
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required><br>
+
+                <label for="blood-group">Blood Group:</label>
+                <input type="text" id="blood-group" name="blood_group"><br>
+
+                <label for="id-no">ID Number:</label>
+                <input type="text" id="id-no" name="id_no" required><br>
+
+                <label for="aadhar">Aadhar Number:</label>
+                <input type="text" id="aadhar" name="aadhar" required><br>
+
+                <label for="pan">PAN Number:</label>
+                <input type="text" id="pan" name="pan"><br>
+            </fieldset>
+
+            <!-- Contact Information Section -->
+            <fieldset>
+                <legend>Contact Information</legend>
+                <label for="email">Email ID:</label>
+                <input type="email" id="email" name="email" required> <br>
+
+                <label for="mobile">Mobile Number:</label>
+                <input type="text" id="mobile" name="mobile" required><br>
+
+                <label for="emergency-contact">Emergency Contact Numbers:</label>
+                <textarea id="emergency-contact" name="emergency_contact" rows="3"></textarea><br>
+
+                <label for="address">Permanent Residential Address:</label>
+                <textarea id="address" name="address" rows="3"></textarea><br>
+            </fieldset>
+
+            <!-- Insurance Details Section -->
+            <fieldset>
+                <legend>Insurance Details</legend>
+                <label for="insurance-policy">Insurance Policy Number:</label>
+                <input type="text" id="insurance-policy" name="insurance_policy_no"><br>
+
+                <label for="insurance-exp">Insurance Expiry Date:</label>
+                <input type="date" id="insurance-exp" name="insurance_expiry"><br>
+            </fieldset>
+
+            <!-- Salary Information Section -->
+            <fieldset>
+                <legend>Salary Information</legend>
+                <label for="basic-salary">Basic Salary:</label>
+                <input type="number" id="basic-salary" name="basic_salary" step="0.01"><br>
+
+                <label for="hra">HRA:</label>
+                <input type="number" id="hra" name="hra" step="0.01"><br>
+
+                <label for="conveyance">Conveyance:</label>
+                <input type="number" id="conveyance" name="conveyance" step="0.01"><br>
+
+                <label for="spl-allowance">Special Allowance:</label>
+                <input type="number" id="spl-allowance" name="spl_allowance" step="0.01"><br>
+            </fieldset>
+
+            <input type="submit" value="Add Staff">
+        </form>
+    </div>
+</body>
+</html>

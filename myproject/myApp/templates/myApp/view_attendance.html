@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Attendance</title>
+    <link rel="stylesheet" href="{% static 'myproject/css/view_attendance.css' %}">
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 20px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
+                <nav style="float: right;">
+                    <a href="{% url 'myApp:home' %}" style="margin-left: 1100px; top: 10px;">
+                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
+                    </a>
+                </nav>
+        </div>
+        </header>
+</head> 
+<body>
+    
+    <h1 style="font-weight: bold; text-align: center;">Day-wise Staff Attendance</h1>
+    <form method="GET" action="{% url 'myApp:view_attendance' %}">
+        <div class="date-selection">
+            <label for="view-attendance-date">View Attendance for Date:</label>
+            <input type="date" id="view-attendance-date" name="view_attendance_date" required>
+            <button type="submit">View Attendance</button>
+        </div>
+    </form>
+    <div class="main-content">
+        <h1>Attendance for {{ attendance_date }}</h1>
+        {% if attendance_records %}
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Employee Name</th>
+                        <th>Work Mode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in attendance_records %}
+                    <tr>
+                        <td>{{ record.staff.id_no }}</td>
+                        <td>{{ record.staff.name }}</td>
+                        <td>{{ record.attendance_type }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="text-align: center;">No attendance records found for the selected date.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOSTINDIA STAFF MANAGEMENT SYSTEM</title>
+    <link rel="stylesheet" href="{% static 'myproject/css/index.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="{% static 'myproject/js/chart.js' %}"></script>
+    <style>
+        #attendanceChart {
+            margin-top: 50px; /* Adjust the value as needed */
+            max-width: 600px; /* Set max width  MAIN */
+            max-height: 300px; /* Set max height */
+        }
+        
+    </style>
+</head>
+<body>
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 20px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
+            </div>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <ul>
+            <li><a href="#home"><strong>Home</strong></a></li>
+            <li><a href="{% url 'myApp:manage_staff' %}"><strong>Manage Staff</strong></a></li>
+            <li><a href="{% url 'myApp:attendance' %}"><strong>Manage Attendance</strong></a></li>
+            <li><a href="{% url 'myApp:staff_profiles' %}"><strong>Profiles</strong></a></li>
+            <li><a href="{% url 'myApp:pay_slip' %}"><strong>Payslip</strong></a></li>
+            <li><a href="{% url 'myApp:attendance_menu' %}"><strong>Attendance Menu</strong></a></li>
+
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <section id="home" class="section">
+            <h2>Staff Overview</h2>
+            <div class="dashboard-container">
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <h3>Onsite</h3>
+                        <p id="onsite-count"><strong>{{ total_count.Onsite|default:"0" }}</strong></p>
+                    </div>
+                    <div class="card">
+                        <h3>Offsite</h3>
+                        <p id="offsite-count"><strong>{{ total_count.Offsite|default:"0" }}</strong></p>
+                    </div>
+                    <div class="card">
+                        <h3>WFH</h3>
+                        <p id="wfh-count"><strong>{{ total_count.WFH|default:"0" }}</strong></p>
+                    </div>
+                    <div class="card">
+                        <h3>Leave</h3>
+                        <p id="leave-count"><strong>{{ total_count.Leave|default:"0" }}</strong></p>
+                    </div>
+                    <div class="card">
+                        <h3>Travel</h3>
+                        <p id="travel-count"><strong>{{ total_count.Travel|default:"0" }}</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container for the first graph -->
+            <div style="display: flex; justify-content: center;">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+            <script src="{% static 'myproject/js/chart.js' %}"></script>
+            
+            <!-- Flexbox container to hold the work mode summary charts -->
+            <div class="charts-box-1">
+                <h1 style="text-align: center;">Overall Workmode Summary for the Last 30 Days</h1>
+                <div class="charts-row" id="chartsContainer">
+                    <!-- Work mode charts will be added dynamically here -->
+                </div>
+                <script src="{% static 'myproject/js/graph.js' %}"></script>
+            </div>
+            <style>
+                .charts-box-1 {
+                    border: 1px solid #ccc; /* Add a border */
+                    padding: 20px; /* Add some padding */
+                    margin: 20px; /* Add some margin */
+                    border-radius: 10px; /* Optional: Add rounded corners */
+                    background-color: #f9f9f9; /* Optional: Add a background color */
+                }
+            </style>
+            
+            
+            <!-- Flexbox container to hold the staff-specific work mode charts -->
+            <div class="charts-box">
+                <h1 style="text-align: center;">Staff Workmodes Summary</h1>
+                <div class="charts-row-staff" id="chartsContainer-staff">
+                    <!-- Staff-specific charts will be added dynamically here -->
+                </div>
+                <script src="{% static 'myproject/js/staff.js' %}"></script>
+            </div>
+            <style>
+                .charts-box {
+                    border: 1px solid #ccc; /* Add a border */
+                    padding: 20px; /* Add some padding */
+                    margin: 20px; /* Add some margin */
+                    border-radius: 10px; /* Optional: Add rounded corners */
+                    background-color: #f9f9f9; /* Optional: Add a background color */
+                }
+                .chart-title {
+                    text-align: center; /* Center align the title above the chart */
+                    margin-bottom: 10px; /* Space between title and chart */
+                    font-size: 1.2em; /* Increase font size for better visibility */
+}
+
+            </style>
+            
+        
+        </section>
+</body>
+</html>

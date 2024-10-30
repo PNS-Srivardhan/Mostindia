@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="​name, designation">
+    <meta name="description" content="">
+    <title>Home</title>
+    <link rel="stylesheet" href="nicepage.css" media="screen">
+    <link rel="stylesheet" href="index.css" media="screen">
+    <link rel="stylesheet" href="{% static 'myproject/css/nicepage.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'myproject/css/staff_profiles.css' %}" media="screen">
+    <script class="u-script" type="text/javascript" src="{% static 'myproject/js/jquery.js' %}" defer=""></script>
+    <script class="u-script" type="text/javascript" src="{% static 'myproject/js/nicepage.js' %}" defer=""></script>
+    <script src="{% static 'myproject/js/staff_modal.js' %}"></script>
+
+    <meta name="generator" content="Nicepage 6.18.5, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Home">
+    <meta property="og:type" content="website">
+
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 20px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
+                <nav style="float: right;">
+                    <a href="{% url 'myApp:home' %}" style="margin-left: 1100px; top: 10px;">
+                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
+                    </a>
+                </nav>
+        </div>
+        </header>
+</head>
+<body class="u-body u-xl-mode" data-lang="en">
+<section class="u-clearfix u-container-align-center u-palette-1-base u-section-1" id="carousel_f3f2">
+    <div class="u-clearfix u-sheet u-sheet-1">
+        <h2 class="u-align-center u-text u-text-body-alt-color u-text-default u-text-1">STAFF MEMBERS</h2>
+        <div class="u-expanded-width u-list u-list-1">
+            <div class="u-repeater u-repeater-1" style="display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px; margin-top: 20px;">
+                {% for staff_member in staff_members %}
+                <div class="u-align-center u-border-1 u-border-palette-1-base u-container-align-center u-container-style u-list-item u-opacity u-opacity-100 u-radius-20 u-repeater-item u-shape-round u-white u-list-item-2" style="width: 220px; height: 400px; background-color: #000; margin: 20px; flex: 0 0 220px;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="250">
+                    <div class="u-container-layout u-similar-container u-valign-top u-container-layout-2" style="height: 100%;">
+                        <div class="u-expanded-width u-palette-1-base u-shape u-shape-2"></div>
+                        {% if staff_member.photo %}
+                        <img alt="{{ staff_member.name }}" class="u-image u-image-round u-radius-6" src="{{ staff_member.photo.url }}" style="width: 100%; height: auto; max-height: 250px; display: block; margin-left: auto; margin-right: auto;">  <!-- Fetching image from 'photo' -->
+                        {% else %}
+                        <img alt="{{ staff_member.name }}" class="u-image u-image-round u-radius-6" src="{% static 'myproject/images/default_photo.png' %}" style="width: 100%; height: auto; max-height: 250px; display: block; margin-left: auto; margin-right: auto;">  <!-- Default image -->
+                        {% endif %}
+                        <div class="u-align-center u-container-align-center" style="margin-top: 0px; margin-bottom: 0px;"></div>
+                        <h5 class="u-align-center u-text u-text-16" style="margin-bottom: 5px; font-weight: bold;">{{ staff_member.name }}</h5>
+                        <p class="u-align-center u-text u-text-15" style="margin-top: 5px;">{{ staff_member.designation }}</p>
+                        <a href="javascript:void(0);" class="u-btn u-btn-round u-button-style u-radius-10"
+   style="margin-top: 10px; display: block; text-align: center; position: absolute; top: 340px; left: 50%; transform: translateX(-50%); padding: 5px 10px; font-size: 0.875rem;"
+   onclick="showBio('{{ staff_member.name }}', '{{ staff_member.designation }}', '{{ staff_member.qualification }}', '{{ staff_member.joining_date }}', '{{ staff_member.dob }}', '{{ staff_member.blood_group }}', '{{ staff_member.id_no }}', '{{ staff_member.aadhar }}', '{{ staff_member.pan }}', '{{ staff_member.email }}', '{{ staff_member.mobile }}', '{{ staff_member.emergency_contact }}', '{{ staff_member.address }}', '{{ staff_member.insurance_policy_no }}', '{{ staff_member.insurance_expiry }}', '{{ staff_member.basic_salary }}', '{{ staff_member.hra }}', '{{ staff_member.conveyance }}', '{{ staff_member.spl_allowance }}')">
+   View Bio
+</a>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<div id="staffModal" class="modal" style="display:none; position: fixed; z-index: 1; padding-top: 60px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);padding-top: 70px;">
+    <div class="modal-content" style="background-color: #fff; margin: auto; padding: 20px; border-radius: 10px; width: 60%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+      <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+      
+      <h2 id="staffName" style="text-align: center; margin-bottom: 20px;"></h2>
+      
+      <div class="staff-details-box" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; ">
+        <div><strong>Designation:</strong> <span id="staffDesignation"></span></div>
+        <div><strong>Qualification:</strong> <span id="staffQualification"></span></div>
+        <div><strong>Joining Date:</strong> <span id="staffJoiningDate"></span></div>
+        <div><strong>Date of Birth:</strong> <span id="staffDOB"></span></div>
+        <div><strong>Blood Group:</strong> <span id="staffBloodGroup"></span></div>
+        <div><strong>ID Number:</strong> <span id="staffIdNo"></span></div>
+        <div><strong>Aadhar:</strong> <span id="staffAadhar"></span></div>
+        <div><strong>PAN:</strong> <span id="staffPAN"></span></div>
+        <div><strong>Email:</strong> <span id="staffEmail"></span></div>
+        <div><strong>Mobile:</strong> <span id="staffMobile"></span></div>
+        <div><strong>Emergency Contact:</strong> <span id="staffEmergencyContact"></span></div>
+        <div><strong>Address:</strong> <span id="staffAddress"></span></div>
+        <div><strong>Insurance Policy No:</strong> <span id="staffInsurancePolicyNo"></span></div>
+        <div><strong>Insurance Expiry:</strong> <span id="staffInsuranceExpiry"></span></div>
+        <div><strong>Basic Salary:</strong> <span id="staffBasicSalary"></span></div>
+        <div><strong>HRA:</strong> <span id="staffHRA"></span></div>
+        <div><strong>Conveyance:</strong> <span id="staffConveyance"></span></div>
+        <div><strong>Special Allowance:</strong> <span id="staffSplAllowance"></span></div>
+      </div>
+    </div>
+  </div>
+  
+  
+</body>
+</html>

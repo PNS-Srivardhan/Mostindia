@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAFF_MANAGEMENT</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static 'myproject/css/manage_staff.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
+   
+</head>
+<body>
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 20px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
+                <nav style="float: right;">
+                    <a href="{% url 'myApp:home' %}" style="margin-left: 1100px; top: 10px;">
+                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
+                    </a>
+
+        </div>
+        </header>
+    <div class="main-content">
+        <div class="table-container">
+            <div style="display: flex; justify-content: flex-start;">
+                <h1>STAFF MANAGEMENT</h1>
+            </div>
+
+            <!-- Button to Add New Staff -->
+            <div class="add-staff-container" style="display: flex; justify-content: flex-end;">
+                <button class="add-button" onclick="window.location.href='{% url 'myApp:add_staff' %}'">Add Staff</button>
+            </div>
+
+            <!-- Staff List Table -->
+            <table class="Staff-table">
+                <thead>
+                    <tr>
+                        <th>ID No</th>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>Mobile Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="Staff-list">
+                    {% for Staff in Staff_list %}
+                    <tr id="Staff-{{ Staff.id_no }}">
+                        <td>{{ Staff.id_no }}</td>
+                        <td>{{ Staff.name }}</td>
+                        <td>{{ Staff.designation }}</td>
+                        <td>{{ Staff.mobile }}</td>
+                        
+                        <td>
+                            
+                            <button class="edit-button" onclick="editStaff('{{ Staff.id_no }}')">Edit</button>
+                            <button class="delete-button" onclick="openDeleteModal('{{ Staff.id_no }}')">Delete</button>
+
+
+
+
+
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">No staff members found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <p>Are you sure you want to delete this staff member?</p>
+        </div>
+        <div class="modal-footer">
+            <form id="deleteForm" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn-confirm-delete">Confirm Delete</button>
+                <button type="button" onclick="$('#deleteModal').modal('hide')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let staffIdToDelete = null; // Store the staff ID to delete
+
+        function viewDetails(idNo) {
+            alert("Viewing details for Staff ID No: " + idNo);
+        }
+
+        function editStaff(idNo) {
+            window.location.href = "{% url 'myApp:edit_staff' id_no='0' %}".replace('0', idNo);
+        }
+
+        function openDeleteModal(id_no) {
+    const deleteForm = document.getElementById('deleteForm');
+    deleteForm.action = `/delete_staff/?id_no=${id_no}`;  // Use query parameter format
+    console.log(`Setting form action to: ${deleteForm.action}`);  // Debug
+    $('#deleteModal').modal('show');
+}
+
+
+
+
+
+    </script>
+</body>
+</html>

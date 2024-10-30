@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management</title>
+    <link rel="stylesheet" href="{% static 'myproject/css/attendance.css' %}">
+</head> 
+<body>
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 20px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
+                <nav style="float: right;">
+                    <a href="{% url 'myApp:home' %}" style="margin-left: 1100px; top: 10px;">
+                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
+                    </a>
+                </nav>
+        </div>
+        </header>
+    <div class="main-content">
+        <h1>Attendance Management</h1>
+
+        <form method="POST" action="{% url 'myApp:attendance_view' %}">
+            {% csrf_token %}  <!-- Include CSRF token for security -->
+            {{ form.as_p }}
+
+            <div class="date-selection">
+                <label for="attendance-date">Select Date:</label>
+                <input type="date" id="attendance-date" name="attendance_date" value="{{ today }}" required>
+            </div>
+
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Employee Name</th>
+                        <th>Work Mode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for staff in staff_list %}
+                    <tr>
+                        <td>{{ staff.id_no }}</td>
+                        <td>{{ staff.name }}</td>
+                        <td>
+                            <select class="work-mode" name="attendance_type_{{ staff.id_no }}">
+                                <option value="Onsite">Onsite</option>
+                                <option value="Offsite">Offsite</option>
+                                <option value="WFH">Work from Home</option>
+                                <option value="Leave">Leave</option>
+                                <option value="Travel">Travel</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+            <div class="save-button-container">
+                <button type="submit" class="save-button">Save Attendance</button>
+            </div>
+        </form>
+
+    </div>
+</body>
+</html>

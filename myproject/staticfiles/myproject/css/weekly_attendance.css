@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #C4DFE6;
+    padding-top: 80px; /* Adjust this value based on the height of your fixed header */
+    
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+label {
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+input[type="date"] {
+    margin: 0 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #66A5AD;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #66A5AD;
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #66A5AD;
+    text-align: left;
+}
+
+th {
+    background-color: #66A5AD;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+p {
+    text-align: center;
+    color: #666;
+}
+
+header {
+    position: fixed; /* Fixes the header at the top */
+    top: 0; /* Positions the header at the top of the page */
+    left: 0; /* Aligns the header to the left */
+    right: 0; /* Aligns the header to the right */
+    z-index: 1000; /* Ensures the header is above other elements */
+    background-color: #C4DFE6; /* Optional: Set a background color */
+}
+
+header {
+    background-color:#66A5AD; /* Set the background color of the header */
+    color: #fff; /* Set the text color to white */
+    padding: 10px 0; /* Add padding to the top and bottom of the header */
+}
+
+header .u-sheet-1 {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between;     /* Space out the items */
+    align-items: center;            /* Center align items vertically */ 
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 20px;
+}

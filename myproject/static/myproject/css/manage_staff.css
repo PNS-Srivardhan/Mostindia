@@ -1,0 +1,297 @@
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75vh; /* Make the main content take full height */
+    background-color: #f4f4f4;
+    padding: -200px; /* Increase padding to make the box larger */
+}
+
+.table-container {
+    width: 100%; /* Limit the table container width */
+    height: 75vh;
+    max-width: 2000px;
+    padding: -200px;
+    border: 2px solid #ffffff; /* Blue border around the table */
+    border-radius: 15px;
+    background-color: #ffffff; /* White background for the table */
+}
+
+/* Style the table */
+.Staff-table {
+    width: 100%;
+    margin: 0 auto; /* Center the table inside the container */
+    border-collapse: collapse;
+}
+
+.Staff-table th, .Staff-table td {
+    border: 1px solid #dddddd;
+    padding: -20px;
+    text-align: center;
+}
+
+.Staff-table th {
+    background-color: #007bff; /* Table header background */
+    color: white;
+}
+
+.Staff-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.Staff-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Buttons styling */
+.add-button {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 20px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    background-color: #0056b3;
+}
+
+.details-button, .edit-button, .delete-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.details-button {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+.edit-button {
+    background-color: #ffc107;
+    color: #ffffff;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.details-button:hover {
+    background-color: #218838;
+}
+
+.edit-button:hover {
+    background-color: #e0a800;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+/* Circular photo styling */
+.circular-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.sidebar {
+width: 250px;
+height: 100vh;
+background-color: #2c3e50;
+color: #ecf0f1;
+position: fixed;
+}
+
+.sidebar h2 {
+text-align: center;
+padding: 15px 0;
+background: #34495e;
+margin: 0;
+}
+
+.sidebar ul {
+list-style-type: none;
+padding: 0;
+margin: 0;
+}
+
+.sidebar ul li {
+padding: 15px;
+}
+
+.sidebar ul li a {
+text-decoration: none;
+color: #ecf0f1;
+display: block;
+}
+
+.sidebar ul li a:hover {
+background: #1abc9c;
+color: #2c3e50;
+}
+
+header {
+    position: fixed; /* Fixes the header at the top */
+    top: 0; /* Positions the header at the top of the page */
+    left: 0; /* Aligns the header to the left */
+    right: 0; /* Aligns the header to the right */
+    z-index: 1000; /* Ensures the header is above other elements */
+    background-color: #C4DFE6; /* Optional: Set a background color */
+}
+
+        header {
+    background-color:#66A5AD; /* Set the background color of the header */
+    color: #fff; /* Set the text color to white */
+    padding: 10px 0; /* Add padding to the top and bottom of the header */
+}
+
+        header .u-sheet-1 {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between;     /* Space out the items */
+    align-items: center;            /* Center align items vertically */ 
+}
+
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Make the main content take full height */
+            background-color: #f4f4f4;
+            padding: -2000 px; /* Increase padding to make the box larger */
+        }
+
+        .table-container {
+            width: 100%; /* Limit the table container width */
+            height: 75vh;
+            max-width: 2000px;
+            padding: -500px;
+            border: 2px solid #ffffff; /* Blue border around the table */
+            border-radius: 15px;
+            background-color: #ffffff; /* White background for the table */
+        }
+
+        /* Style the table */
+        .Staff-table {
+            width: 100%;
+            margin: 0 auto; /* Center the table inside the container */
+            border-collapse: collapse;
+        }
+
+        .Staff-table th, .Staff-table td {
+            border: 3px solid #C4DFE6;
+            padding: -20px;
+            text-align: center;
+        }
+
+        .Staff-table th {
+            background-color: #66A5AD; /* Table header background */
+            color: white;
+        }
+
+        .Staff-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .Staff-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Buttons styling */
+        .add-button {
+            background-color: #66A5AD;
+            color: #ffffff;
+            padding: 10px 20px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-button:hover {
+            background-color: #66A5AD;
+        }
+
+        .details-button, .edit-button, .delete-button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .details-button {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .edit-button {
+            background-color: #66A5AD;
+            color: #ffffff;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        .details-button:hover {
+            background-color: #218838;
+        }
+
+        .edit-button:hover {
+            background-color: #66A5AD;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        /* Circular photo styling */
+        .circular-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        .sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #ffffff;
+    color: #ecf0f1;
+    position: fixed;
+}
+
+.sidebar h2 {
+    text-align: center;
+    padding: 15px 0;
+    background: #34495e;
+    margin: 0;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    display: block;
+}
+
+.sidebar ul li a:hover {
+    background: #1abc9c;
+    color: #2c3e50;
+}

@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Attendance</title>
+    <link rel="stylesheet" href="{% static 'myproject/css/month.css' %}">
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 20px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
+                <nav style="float: right;">
+                    <a href="{% url 'myApp:home' %}" style="margin-left: 1100px; top: 10px;">
+                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
+                    </a>
+                </nav>
+        </div>
+        </header>
+</head>
+<body>
+    <h1>Monthly Attendance</h1>
+    <form method="GET" action="{% url 'myApp:monthly_attendance' %}">
+        <select id="month" name="month" required>
+            <option value="">Select a month</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    {% if attendance_records %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee Name</th>
+                <th>Onsite</th>
+                <th>Offsite</th>
+                <th>WFH</th>
+                <th>Leave</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for staff_id, counts in attendance_count.items %}
+            <tr>
+                <td>{{ staff_id }}</td>
+                <td>{{ counts.name }}</td>
+                <td>{{ counts.Onsite }}</td>
+                <td>{{ counts.Offsite }}</td>
+                <td>{{ counts.WFH }}</td>
+                <td>{{ counts.Leave }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No attendance records found for the selected month.</p>
+    {% endif %}
+</body>
+</html>

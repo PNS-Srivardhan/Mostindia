@@ -1,0 +1,7 @@
+
+> my-electron-app@1.0.0 start
+> electron .
+
+
+(node:7360) electron: Failed to load URL: http://127.0.0.1:8000/ with error: ERR_CONNECTION_REFUSED
+(Use `electron --trace-warnings ...` to show where the warning was created)

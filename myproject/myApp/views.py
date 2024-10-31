@@ -26,7 +26,34 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 # _____________________________________________LOGIN_______________________________________________________
-# myApp/views.py
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import LoginForm
+from .models import User
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            try:
+                # Check if the user exists
+                user = User.objects.get(username=username)
+                
+                # Check if the password is correct
+                if user.check_password(password):
+                    # Redirect to the home page on success
+                    return redirect('home')
+                else:
+                    messages.error(request, "Incorrect password.")
+            except User.DoesNotExist:
+                messages.error(request, "Username not found.")
+    else:
+        form = LoginForm()
+    return render(request, 'myApp/login.html', {'form': form})
+
 
 
 

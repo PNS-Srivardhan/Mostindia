@@ -35,4 +35,8 @@ class AttendanceForm(forms.ModelForm):
         model = Attendance
         fields = ['staff', 'attendance_type']
 
+from django import forms
 
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=150, label="Username")
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")

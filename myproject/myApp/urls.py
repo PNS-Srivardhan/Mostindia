@@ -13,14 +13,18 @@ from myApp import views
 from .views import generate_pay_slip, pay_slip, view_pay_slip
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import home, daily_attendance, staff_profiles, view_bio, staff_success, attendance, view_attendance, attendance_staff_detail, attendance_menu, weekly_attendance, monthly_attendance, error, edit_earnings
+from .views import home, daily_attendance, staff_profiles, view_bio, staff_success, attendance, view_attendance, attendance_staff_detail, attendance_menu, weekly_attendance, monthly_attendance, error, edit_earnings, settings
 app_name = 'myApp'  # This app_name should match in your templates
+
+from . import views 
 
 urlpatterns = [
     
     #______________________________________________LOGIN___________________________________________________________
 
-    path('', views.home, name='home'),
+    # path('', views.home, name='home'),
+    path('login/', views.login_view, name='login'),
+    path('home/', views.home, name='home'),
  
 
     #______________________________________________ HOME________________________________________________________________

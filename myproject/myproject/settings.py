@@ -1,4 +1,5 @@
-from pathlib import Path
+
+
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -10,7 +11,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR , 'media')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,7 +38,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR , 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -57,6 +58,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR ,'db.sqlite3'),
+        'NAME': r'C:\Users\ploke\SMS\mos-main\myproject\db.sqlite3',
+
         
 
         'OPTIONS': {
@@ -78,8 +81,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = os.path.join(BASE_DIR , "static"),
+#STATIC_ROOT = BASE_DIR ,'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

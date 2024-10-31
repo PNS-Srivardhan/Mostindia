@@ -1,10 +1,13 @@
-# myproject/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from myApp import views 
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('myApp.urls',namespace='myApp')),  # Ensure the namespace matches
-
+    path('', include('myApp.urls')),  # Remove `namespace` if not set in myApp
 ]
+
+# Serve media files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

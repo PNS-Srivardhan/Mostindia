@@ -1,7 +1,7 @@
 # myApp/urls.py
 from django.urls import path
 from . import views
-from django.conf import settings
+from django.conf import settings as django_settings
 from django.conf.urls.static import static
 from .views import staff_detail, attendance_success
 from .views import edit_staff , manage_staff_view, add_staff, edit_staff, delete_staff
@@ -22,7 +22,7 @@ urlpatterns = [
     
     #______________________________________________LOGIN___________________________________________________________
 
-    # path('', views.home, name='home'),
+    path('', views.home, name='home'),
     path('login/', views.login_view, name='login'),
     path('home/', views.home, name='home'),
  
@@ -78,4 +78,4 @@ urlpatterns = [
     
     #______________________________________________settings___________________________________________________________
     path('settings/', views.settings, name='settings'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(django_settings.MEDIA_URL, document_root=django_settings.MEDIA_ROOT)

@@ -1,17 +1,4 @@
 @echo off
-
-REM Upgrade pip to the latest version
-echo Upgrading pip...
-python -m pip install --upgrade pip || (echo Failed to upgrade pip. & pause & exit /b)
-
-REM Check if Python is installed
-echo Checking for Python installation...
-python --version >nul 2>&1 || (
-    echo Python is not installed. Please install Python from https://www.python.org/downloads/ and try again.
-    pause
-    exit /b
-)
-
 REM Navigate to the directory of the script
 cd "%~dp0" || (echo Failed to navigate to script directory. & pause & exit /b)
 
@@ -25,9 +12,6 @@ if not exist "manage.py" (
     exit /b
 )
 
-REM Run Django migrations to set up the database
-echo Running Django migrations...
-python manage.py migrate || (echo Failed to apply migrations. & pause & exit /b)
 
 REM Start the Django server and log output
 start cmd /k "python manage.py runserver 8080"

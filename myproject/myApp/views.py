@@ -34,28 +34,19 @@ from .models import User
 
 
 def login_view(request):
-
     if request.method == 'POST':
-
         username = request.POST.get('username')
-
         password = request.POST.get('password')
-
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-
             login(request, user)
-
             return redirect('home/')
-
         else:
-
             if not User.objects.filter(username=username).exists():
-
-                return render(request, 'myApp/login.html', {'error': 'Username not found'})
-
-            return render(request, 'myApp/login.html', {'error': 'Invalid username or password'})
+                messages.error(request, 'Username not found')
+            else:
+                messages.error(request, 'Invalid username or password')
 
     return render(request, 'myApp/login.html')
 

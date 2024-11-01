@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 from django.conf import settings as django_settings
 from django.conf.urls.static import static
-from .views import staff_detail, attendance_success
+from .views import staff_detail, attendance_success, login_view
 from .views import edit_staff , manage_staff_view, add_staff, edit_staff, delete_staff
 from .views import attendance_view
 from django.urls import path
@@ -22,8 +22,7 @@ urlpatterns = [
     
     #______________________________________________LOGIN___________________________________________________________
 
-    path('', views.home, name='home'),
-    path('login/', views.login_view, name='login'),
+    path('', views.login_view, name='login'),
     path('home/', views.home, name='home'),
  
 
@@ -69,7 +68,6 @@ urlpatterns = [
 
     #______________________________________________PAY_SLIP___________________________________________________________
 
-    path('pay_slip/', views.pay_slip, name='pay_slip'),
     path('pay_slip/', views.pay_slip, name='pay_slip'),
     path('generate_pay_slip/<str:id_no>/', generate_pay_slip, name='generate_pay_slip'),
     path('view_pay_slip/<str:id_no>/', view_pay_slip, name='view_pay_slip'),

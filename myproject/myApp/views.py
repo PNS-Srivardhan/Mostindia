@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login
 from .models import Staff
 from myApp.models import Staff
 from django.http import HttpResponse , JsonResponse
@@ -31,34 +32,36 @@ from django.contrib import messages
 from .forms import LoginForm
 from .models import User
 
+
 def login_view(request):
+
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
 
-            try:
-                # Check if the user exists
-                user = User.objects.get(username=username)
-                
-                # Check if the password is correct
-                if user.check_password(password):
-                    # Redirect to the home page on success
-                    return redirect('home')
-                else:
-                    messages.error(request, "Incorrect password.")
-            except User.DoesNotExist:
-                messages.error(request, "Username not found.")
-    else:
-        form = LoginForm()
-    return render(request, 'myApp/login.html', {'form': form})
+        username = request.POST.get('username')
 
+        password = request.POST.get('password')
 
+        user = authenticate(request, username=username, password=password)
 
+        if user is not None:
 
+            login(request, user)
+
+            return redirect('home/')
+
+        else:
+
+            if not User.objects.filter(username=username).exists():
+
+                return render(request, 'myApp/login.html', {'error': 'Username not found'})
+
+            return render(request, 'myApp/login.html', {'error': 'Invalid username or password'})
+
+    return render(request, 'myApp/login.html')
 
 # _____________________________________________HOME PAGE_______________________________________________________
+from django.shortcuts import render
+@login_required
 def home(request):
     # Get today's date
     today = timezone.now().date()

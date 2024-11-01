@@ -69,31 +69,101 @@
     <div class="modal-content" style="background-color: #fff; margin: auto; padding: 20px; border-radius: 10px; width: 60%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
       <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
       
-      <h2 id="staffName" style="text-align: center; margin-bottom: 20px;"></h2>
+      <h2></h2>
       
-      <div class="staff-details-box" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; ">
-        <div><strong>Designation:</strong> <span id="staffDesignation"></span></div>
-        <div><strong>Qualification:</strong> <span id="staffQualification"></span></div>
-        <div><strong>Joining Date:</strong> <span id="staffJoiningDate"></span></div>
-        <div><strong>Date of Birth:</strong> <span id="staffDOB"></span></div>
-        <div><strong>Blood Group:</strong> <span id="staffBloodGroup"></span></div>
-        <div><strong>ID Number:</strong> <span id="staffIdNo"></span></div>
-        <div><strong>Aadhar:</strong> <span id="staffAadhar"></span></div>
-        <div><strong>PAN:</strong> <span id="staffPAN"></span></div>
-        <div><strong>Email:</strong> <span id="staffEmail"></span></div>
-        <div><strong>Mobile:</strong> <span id="staffMobile"></span></div>
-        <div><strong>Emergency Contact:</strong> <span id="staffEmergencyContact"></span></div>
-        <div><strong>Address:</strong> <span id="staffAddress"></span></div>
-        <div><strong>Insurance Policy No:</strong> <span id="staffInsurancePolicyNo"></span></div>
-        <div><strong>Insurance Expiry:</strong> <span id="staffInsuranceExpiry"></span></div>
-        <div><strong>Basic Salary:</strong> <span id="staffBasicSalary"></span></div>
-        <div><strong>HRA:</strong> <span id="staffHRA"></span></div>
-        <div><strong>Conveyance:</strong> <span id="staffConveyance"></span></div>
-        <div><strong>Special Allowance:</strong> <span id="staffSplAllowance"></span></div>
-      </div>
+      <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+        <tr>
+            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Name:</strong></td>
+            <td id="staffName" style=" margin-bottom: 20px;"></td>
+          </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Designation:</strong></td>
+          <td id="staffDesignation" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Qualification:</strong></td>
+          <td id="staffQualification" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Joining Date:</strong></td>
+          <td id="staffJoiningDate" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Date of Birth:</strong></td>
+          <td id="staffDOB" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Blood Group:</strong></td>
+          <td id="staffBloodGroup" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>ID Number:</strong></td>
+          <td id="staffIdNo" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Aadhar:</strong></td>
+          <td id="staffAadhar" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>PAN:</strong></td>
+          <td id="staffPAN" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Email:</strong></td>
+          <td id="staffEmail" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Mobile:</strong></td>
+          <td id="staffMobile" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Emergency Contact:</strong></td>
+          <td id="staffEmergencyContact" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Address:</strong></td>
+          <td id="staffAddress" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Insurance Policy No:</strong></td>
+          <td id="staffInsurancePolicyNo" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Insurance Expiry:</strong></td>
+          <td id="staffInsuranceExpiry" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Basic Salary:</strong></td>
+          <td id="staffBasicSalary" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>HRA:</strong></td>
+          <td id="staffHRA" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Conveyance:</strong></td>
+          <td id="staffConveyance" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;"><strong>Special Allowance:</strong></td>
+          <td id="staffSplAllowance" style="border: 1px solid #ddd; padding: 8px;"></td>
+        </tr>
+      </table>
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="printBio()" style="padding: 10px 20px; background-color: #478ac9; color: white; border: none; border-radius: 5px; cursor: pointer;">Print</button>
+    </div></div>
+
+      <script>
+      function printBio() {
+          var printContents = document.querySelector('.modal-content').innerHTML;
+          var originalContents = document.body.innerHTML;
+  
+          document.body.innerHTML = printContents;
+          window.print();
+          document.body.innerHTML = originalContents;
+      }
+      </script>
     </div>
   </div>
-  
-  
 </body>
 </html>

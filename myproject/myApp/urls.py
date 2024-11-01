@@ -73,6 +73,7 @@ urlpatterns = [
     path('view_pay_slip/<str:id_no>/', view_pay_slip, name='view_pay_slip'),
     path('edit_earnings/<str:id_no>/', views.edit_earnings, name='edit_earnings'),
     path('staff_detail/<int:staff_id>/', views.staff_detail, name='staff_detail'),
+    path('send_pay_slip/<str:id_no>/', views.send_pay_slip, name='send_pay_slip'),
     
     #______________________________________________settings___________________________________________________________
     path('settings/', views.settings, name='settings'),

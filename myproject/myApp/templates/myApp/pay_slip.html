@@ -58,6 +58,7 @@
                         <button onclick="viewPaySlip('{{ staff.id_no }}')">Generate & View</button>
                         <button onclick="window.location.href='/edit_earnings/{{ staff.id_no }}/'">Edit Earnings</button>
                         <button onclick="generatePaySlip('{{ staff.id_no }}')">Download</button>
+                        <button onclick="window.location.href='/send_pay_slip/{{ staff.id_no }}/'">Send Pay Slip</button>
                     </td>
                 </tr>
                 {% empty %}

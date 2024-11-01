@@ -735,90 +735,18 @@ from datetime import date
 from calendar import monthrange
 from .models import Staff, Attendance  # Adjust as needed based on your models
 from django.contrib.staticfiles import finders
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 def view_pay_slip(request, id_no):
     # Fetch the staff member based on the id_no
-    try:
-        staff_member = Staff.objects.get(id_no=id_no)
-    except Staff.DoesNotExist:
-        return HttpResponse("Staff member not found", status=404)
+    staff_member = Staff.objects.get(id_no=id_no)
 
-    # Create a PDF response
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="pay_slip_{staff_member.name}.pdf"'
-
-    # Create the PDF using ReportLab
-    p = canvas.Canvas(response, pagesize=letter)
-    width, height = letter
-
-    # Add the company logo
-    logo_path = finders.find('myproject/images/logopdf.jpg')  # Ensure the logo is in the 'static/images' folder
-    if logo_path:  # Check if logo is found
-        p.drawImage(logo_path, 50, height - 100, width=120, height=50)
-
-    # Title and Company Information
-    p.setFont("Helvetica", 12)
-    p.drawString(450, height - 60, "Pay Slip For the Month")
-    
-    # Fetch the present month
-    p.setFont("Helvetica-Bold", 14)
-    current_month = date.today().strftime('%B %Y')
-    p.drawString(465, height - 80, f"{current_month}")
-
-    # Employee Summary Section
-    p.setFont("Helvetica-Bold", 9)
-    p.setFillColor(colors.grey)
-    p.drawString(65, height - 160, "EMPLOYEE SUMMARY")
-    p.setFillColor(colors.black)  # Reset to black for subsequent text
-
-
-    p.setFont("Helvetica", 10)
-    p.setFillColor(colors.grey)
-    p.drawString(65, height - 180, "Employee Name     :")
-    p.setFillColor(colors.black)
-    p.setFont("Helvetica", 10)
-    p.drawString(160, height - 180, f"{staff_member.name}")
-
-
-    p.setFont("Helvetica", 10)
-    p.setFillColor(colors.grey)
-    p.drawString(65, height - 200, f"Employee ID           :")
-    p.setFillColor(colors.black)
-    p.setFont("Helvetica", 10)
-    p.drawString(160, height - 200, f"{staff_member.id_no}")
-
-    p.setFont("Helvetica", 10)
-    p.setFillColor(colors.grey)
-    p.drawString(65, height - 220, f"Pay Period              :")
-    p.setFillColor(colors.black)
-    p.setFont("Helvetica", 10)
-    p.drawString(160, height - 220, f"{current_month}")
-
-    p.setFont("Helvetica", 10)
-    p.setFillColor(colors.grey)
-    p.drawString(65, height - 240, f"Pay Date                 :")
-    p.setFillColor(colors.black)
-    p.setFont("Helvetica", 10)
-    p.drawString(160, height - 240, f"{date.today().strftime('%d/%m/%Y')}")
-
-    # Salary Information
+    # Calculate the total salary
     total_salary = staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + staff_member.incentive
-
-    # Draw a dotted box around the salary information
-    p.setStrokeColor(colors.black)
-    p.setLineWidth(0.5)
-    p.setFillColor(colors.lightgreen)
-    p.setFillAlpha(0.5)  # Set opacity to 50%
-    p.roundRect(340, height - 210, 220, 75, 10, stroke=1, fill=1)
-    p.setFillAlpha(0.5)  # Reset opacity to 100%
-    p.setFillColor(colors.black)
-    p.setLineWidth(1)
-    p.roundRect(340, height - 260, 220, 125, 10) #black border
-    p.setFont("Helvetica-Bold", 25)
-    p.drawString(350, height - 175, f"{total_salary:,.2f}")
-    p.setFont("Helvetica", 10)
-    p.drawString(350, height - 190, "Employee Net Pay")
     
+
     # Calculate the number of leave days in the current month for the staff member
     year = date.today().year
     month = date.today().month
@@ -828,108 +756,24 @@ def view_pay_slip(request, id_no):
         attendance_date__year=year,
         attendance_date__month=month
     ).count()
-    p.drawString(350, height - 250, f"LOP Days: {leave_days}")
 
     # Calculate the number of days in the current month
     num_days_in_month = monthrange(year, month)[1]
     paid_days = num_days_in_month - leave_days
-    p.drawString(350, height - 230, f"Paid Days: {paid_days}")
 
-    # Earnings and Deductions Table Headers
-    # Draw a box around the Earnings and Deductions headers
-    p.setStrokeColor(colors.black)
-    p.setLineWidth(1)
-    p.roundRect(50, height - 460, 500, 150, 10)
+    # Prepare context for the template
+    context = {
+        'staff_member': staff_member,
+        'total_salary': total_salary,
+        'leave_days': leave_days,
+        'paid_days': paid_days,
+        'current_month': date.today().strftime('%B %Y'),
+        'pay_date': date.today().strftime('%d/%m/%Y'),
+    }
 
-    p.setFont("Times-Roman", 12)
-    p.drawString(60, height - 330, "EARNINGS")
-    p.drawString(210, height - 330, "AMOUNT")
-    p.drawString(310, height - 330, "DEDUCTIONS")
-    p.drawString(460, height - 330, "AMOUNT")
-
-    # Draw a dotted line between the earning amount and basic
-    p.setDash(1, 2)  # Set the dash pattern: 1 point on, 2 points off
-    p.line(60, height - 340, 260, height - 340)  # Draw the line
-    p.setDash()  # Reset to solid line
-
-    p.setDash(1, 2)  # Set the dash pattern: 1 point on, 2 points off
-    p.line(310, height - 340, 510, height - 340)  # Draw the line
-    p.setDash()  # Reset to solid line
-
-    # Earnings Details
-    p.setFont("Helvetica", 10)
-    p.drawString(60, height - 360, "Basic  ")
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 360, f"{staff_member.basic_salary:.2f}")
-    p.setFont("Helvetica", 10)
-    p.drawString(60, height - 380, "House Rent Allowance ")
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 380, f"{staff_member.hra:.2f}")
-    p.setFont("Helvetica", 10)
-    p.drawString(60, height - 400, "Conveyance")
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 400, f"{staff_member.conveyance:.2f}")
-    p.setFont("Helvetica", 10)
-    p.drawString(60, height - 420, "Special Allowance")
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 420, f"{staff_member.spl_allowance:.2f}")
-    p.setFont("Helvetica", 10)
-    p.drawString(60, height - 440, "Incentives")
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 440, f"{staff_member.incentive:.2f}")
+    return render(request, 'myApp/payslip_view.html', context)
 
 
-    p.drawString(60,height-470, "Gross Earnings")
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 470, f"{total_salary:.2f}")
-
-    # Deductions Details
-    p.setFont("Helvetica", 10)
-    p.drawString(310, height - 360, "Income Tax")
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(460, height - 360, "0.00")
-    p.setFont("Helvetica", 10)
-    p.drawString(310, height - 380, "Provident Fund")
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(460, height - 380, "0.00")
-
-    
-    p.drawString(310, height - 470  , "Total Deductions")
-    total_deductions = 0.00  # Assuming no deductions for now
-    p.drawString(460, height - 470, f"{total_deductions:.2f}")
-        
-
-    # Net Payable
-    p.setFont("Helvetica-Bold", 12)
-    p.drawString(60, height - 540, "TOTAL NET PAYABLE")
-    p.setFont("Helvetica", 9)
-    p.drawString(60, height - 550, "Gross Earnings - Total Deductions")
-    p.setFont("Helvetica-Bold", 14)
-    
-    # Set background color for the amount only
-    amount_x = 460
-    amount_y = height - 560
-    amount_width = 90
-    amount_height = 35
-    
-    p.setFillColor(colors.lightgreen)
-    p.setFillAlpha(0.5)  # Set opacity to 50%
-    p.roundRect(amount_x, amount_y, amount_width, amount_height, 10, stroke=0, fill=1)
-    
-    # Reset fill color to black for text
-    p.setFillAlpha(1)  # Reset opacity to 100%
-    p.setFillColor(colors.black)
-    p.drawString(470, height - 548, f"{total_salary:,.2f}")
-
-    # Draw a box around the Net Payable section
-    p.setStrokeColor(colors.black)
-    p.setLineWidth(1)
-    p.roundRect(50, height - 560, 500, 35, 10)
-
-    p.showPage()
-    p.save()
-
-    return response
 
 def edit_earnings(request, id_no):
     staff = get_object_or_404(Staff, id_no=id_no)
@@ -945,6 +789,26 @@ def edit_earnings(request, id_no):
         return redirect('myApp:pay_slip')
         
     return render(request, 'myApp/edit_earnings.html', {'staff': staff})
+
+def send_pay_slip(request, id_no):
+        staff_member = get_object_or_404(Staff, id_no=id_no)
+        
+        # Generate the PDF
+        response = generate_pay_slip(request, id_no)
+        pdf_content = response.content
+
+        # Create the email
+        subject = 'PAY_SLIP_FOR_THE_MONTH'
+        html_message = render_to_string('myApp/email.html', {'staff_member': staff_member})
+        plain_message = strip_tags(html_message)
+        email = EmailMessage(subject, plain_message, to=[staff_member.email])
+        email.attach(f'pay_slip_{staff_member.name}_{date.today().strftime("%B_%Y")}.pdf', pdf_content, 'application/pdf')
+
+        # Send the email
+        email.send()
+
+        messages.success(request, 'Pay slip sent successfully!')
+        return redirect('myApp:pay_slip')
 
 
 

@@ -89,3 +89,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'myApp:home'
   # After login, go 
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
+EMAIL_PORT = 587  # Typically 587 for TLS, 465 for SSL
+EMAIL_USE_TLS = True  # Use TLS
+EMAIL_HOST_USER ='srivardhan466@gmail.com'  # Replace with your email address
+EMAIL_HOST_PASSWORD = 'ontn ecvg ragm rdnm'  # Replace with your email password
+
+
+

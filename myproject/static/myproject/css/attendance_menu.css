@@ -19,16 +19,18 @@ body {
     margin-bottom: 20px;
 }
 .menu a {
-    display: block;
-    margin: 10px 0;
+    display: inline-block; /* Changed from block to inline-block */
+    margin: 10px 5px; /* Adjusted margin for spacing */
     padding: 10px;
     background-color: #66A5AD;
     color: #fff;
     text-decoration: none;
     border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Added transition for background color and transform */
 }
 .menu a:hover {
-    background-color: #66A5AD;
+    background-color: #5A9BA0;
+    transform: scale(1.05); /* Slightly scale up the button on hover */
 }
 
 header {

@@ -30,8 +30,32 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import LoginForm
+from .decorators import master_required 
 from .models import User
 
+@login_required
+@master_required  # Ensure only master users can access this view
+def add_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        group_name = request.POST.get('group')
+
+        # Create the new user
+        user = User.objects.create_user(username=username, password=password)
+        
+        # Assign user to the appropriate group (master or user)
+        group, created = Group.objects.get_or_create(name=group_name)
+        user.groups.add(group)
+        
+        messages.success(request, f'{group_name.capitalize()} user added successfully.')
+        return redirect('add_user')  # Redirect back to the add user page or wherever you prefer
+
+    return render(request, 'myApp/add_user.html')  # Form template for adding users
+
+
+def master_view(request):
+    return render(request, 'myApp/master.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -49,6 +73,7 @@ def login_view(request):
                 messages.error(request, 'Invalid username or password')
 
     return render(request, 'myApp/login.html')
+
 
 # _____________________________________________HOME PAGE_______________________________________________________
 from django.shortcuts import render

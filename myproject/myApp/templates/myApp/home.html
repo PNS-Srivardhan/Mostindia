@@ -24,9 +24,11 @@
             <div style="margin-top: 20px;">
                 <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
                 
-                <a href="{% url 'myApp:login' %}" style="margin-left: 1100px; top: 10px;">
-                    <img src="{% static 'myproject/images/logout.png' %}" alt="Home" style="width: 30px; height: 30px;">
-                    
+                <a href="{% url 'myApp:login' %}" style="margin-left: 1000px; top: 10px;">
+                    <img src="{% static 'myproject/images/logout.png' %}" alt="Home" style="width: 40px; height: 40px;">
+                </a>
+                <a href="{% url 'myApp:master' %}" style="margin-left: 30px; top: 10px;">
+                    <img src="{% static 'myproject/images/master.png' %}" alt="Another Icon" style="width: 40px; height: 40px;">
                 </a>
             </div>
         </div>

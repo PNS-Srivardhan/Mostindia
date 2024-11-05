@@ -42,7 +42,7 @@ header nav a {
     background-color: #66A5AD;
     color: #fbfbfb;
     position: fixed;
-    top: 90px; /* Adjust this value based on the height of your header */
+    top: 80px; /* Adjust this value based on the height of your header */
     bottom: 0;
     padding: 20px;
 }

@@ -21,15 +21,10 @@
 <body>
     <header class="u-clearfix u-header u-header" id="sec-7bf3">
         <div class="u-clearfix u-sheet u-sheet-1">
-            <div style="margin-top: 20px;">
-                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
-                
-                <a href="{% url 'myApp:login' %}" style="margin-left: 1000px; top: 10px;">
-                    <img src="{% static 'myproject/images/logout.png' %}" alt="Home" style="width: 40px; height: 40px;">
-                </a>
-                <a href="{% url 'myApp:master' %}" style="margin-left: 30px; top: 10px;">
-                    <img src="{% static 'myproject/images/master.png' %}" alt="Another Icon" style="width: 40px; height: 40px;">
-                </a>
+            <div style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto;">
+                </div>
+                </div>
             </div>
         </div>
     </header>
@@ -42,6 +37,9 @@
             <li><a href="{% url 'myApp:staff_profiles' %}"><strong>Profiles</strong></a></li>
             <li><a href="{% url 'myApp:pay_slip' %}"><strong>Payslip</strong></a></li>
             <li><a href="{% url 'myApp:attendance_menu' %}"><strong>Attendance Menu</strong></a></li>
+            <li><a href="{% url 'myApp:master' %}"><strong>Super user</strong></a></li>
+            <li><a href="{% url 'myApp:login' %}"><strong>Logout</strong></a></li>            <!-- home.html -->
+
 
         </ul>
     </div>
@@ -70,6 +68,10 @@
                     <div class="card">
                         <h3>Travel</h3>
                         <p id="travel-count"><strong>{{ total_count.Travel|default:"0" }}</strong></p>
+                    </div>
+                    <div class="card">
+                        <h3>Others</h3>
+                        <p id="others-count"><strong>{{ total_count.Others|default:"0" }}</strong></p>
                     </div>
                 </div>
             </div>

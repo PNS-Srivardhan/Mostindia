@@ -28,12 +28,9 @@ class AttendanceForm(forms.ModelForm):
         ('Onsite', 'Onsite'),
         ('Offsite', 'Offsite'),
         ('WFH', 'Work from Home'),
-        ('Leave', 'Leave')
+        ('Leave', 'Leave'),
+        ('Others', 'Others')
     ])
-
-    class Meta:
-        model = Attendance
-        fields = ['staff', 'attendance_type']
 
 from django import forms
 

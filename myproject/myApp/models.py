@@ -70,8 +70,20 @@ class Attendance(models.Model):
             ('WFH', 'Work from Home'),
             ('Leave', 'Leave'),
             ('Travel', 'Travel'),
+            ('Others', 'Others'),
         ]
     )
+    other_attendance_type = models.CharField(
+        max_length=50, 
+        blank=True, 
+        null=True, 
+        help_text="Specify if attendance type is 'Others'"
+    )
+
+    def clean(self):
+        if self.attendance_type == 'Others' and not self.other_attendance_type:
+            raise ValidationError("Please specify the 'Other' attendance type.")
+        super().clean()
     class Meta:
         unique_together = ('staff', 'attendance_date')  # Ensure unique attendance per staff per date
 

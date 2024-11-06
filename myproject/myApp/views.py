@@ -98,6 +98,7 @@ def home(request):
                 'WFH': 0,
                 'Leave': 0,
                 'Travel': 0,
+                'Others': 0,
             }
 
         # Increment the count based on attendance type
@@ -111,6 +112,7 @@ def home(request):
         'WFH': sum(employee['WFH'] for employee in attendance_count.values()),
         'Leave': sum(employee['Leave'] for employee in attendance_count.values()),
         'Travel': sum(employee['Travel'] for employee in attendance_count.values()),
+        'Others': sum(employee['Others'] for employee in attendance_count.values()),
     }
 
     context = {

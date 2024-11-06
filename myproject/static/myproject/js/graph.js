@@ -53,6 +53,9 @@ function createChart(workMode, data) {
     });
 }
 
+// Get the current month in YYYY-MM format
+const currentMonth = new Date().toISOString().slice(0, 7);
+
 // Load chart data and setup observer for lazy loading
 workModes.forEach(workMode => {
     // Create chart container and canvas for each work mode
@@ -65,7 +68,7 @@ workModes.forEach(workMode => {
     document.getElementById('chartsContainer').appendChild(container);
 
     // Fetch data for each chart
-    fetch(`/attendance-chart-data/${workMode}/`)
+    fetch(`/attendance-chart-data/${workMode}/?month=${currentMonth}`)
         .then(response => response.json())
         .then(data => {
             // Set up Intersection Observer

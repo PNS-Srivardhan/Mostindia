@@ -200,11 +200,11 @@ def work_mode_chart_data(request):
 
 def individual_work_mode_data(request, work_mode):
     today = timezone.now().date()
-    last_30_days = today - timedelta(days=30)
+    start_of_month = today.replace(day=1)
 
-    # Filter attendance for the last 30 days for the specific work mode
+    # Filter attendance for the current month for the specific work mode
     attendance_data = Attendance.objects.filter(
-        attendance_type=work_mode, attendance_date__gte=last_30_days
+        attendance_type=work_mode, attendance_date__gte=start_of_month
     ).values('staff__name').annotate(count=Count('staff')).order_by('staff__name')
 
     labels = []
@@ -217,14 +217,15 @@ def individual_work_mode_data(request, work_mode):
     return JsonResponse({'labels': labels, 'data': data})
 
 def staff_workmode_data(request):
-    last_30_days = timezone.now() - timedelta(days=30)
+    today = timezone.now().date()
+    start_of_month = today.replace(day=1)
     staff_data = []
 
     # Fetch all staff members
     staff_members = Staff.objects.all()
     
     for staff in staff_members:
-        work_modes = Attendance.objects.filter(staff=staff, attendance_date__gte=last_30_days)
+        work_modes = Attendance.objects.filter(staff=staff, attendance_date__gte=start_of_month)
         
         work_mode_counts = {
             'Onsite': work_modes.filter(attendance_type='Onsite').count(),

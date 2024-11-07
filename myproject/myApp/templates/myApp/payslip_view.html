@@ -119,12 +119,12 @@ header nav a {
 
         <div class="section-title">EARNINGS AND DEDUCTIONS</div>
         <div class="earnings">
-            <div><span>Basic:</span> <span>{{ staff_member.basic_salary|floatformat:2 }}</span></div>
-            <div><span>House Rent Allowance:</span> <span>{{ staff_member.hra|floatformat:2 }}</span></div>
-            <div><span>Conveyance:</span> <span>{{ staff_member.conveyance|floatformat:2 }}</span></div>
-            <div><span>Special Allowance:</span> <span>{{ staff_member.spl_allowance|floatformat:2 }}</span></div>
-            <div><span>Incentives:</span> <span>{{ staff_member.incentive|floatformat:2 }}</span></div>
-            <div><span>Gross Earnings:</span> <span>{{ total_salary|floatformat:2 }}</span></div>
+            <div><span>Basic:</span> <span>{{ staff_member.basic_salary|floatformat:0}}</span></div>
+            <div><span>House Rent Allowance:</span> <span>{{ staff_member.hra|floatformat:0 }}</span></div>
+            <div><span>Conveyance:</span> <span>{{ staff_member.conveyance|floatformat:0 }}</span></div>
+            <div><span>Special Allowance:</span> <span>{{ staff_member.spl_allowance|floatformat:0 }}</span></div>
+            <div><span>Incentives:</span> <span>{{ staff_member.incentive|floatformat:0 }}</span></div>
+            <div><span>Gross Earnings:</span> <span>{{ total_salary|floatformat:0 }}</span></div>
         </div>
         <div class="deductions">
             <div><span>Income Tax:</span> <span>0.00</span></div>

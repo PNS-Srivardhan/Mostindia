@@ -140,6 +140,7 @@ def daily_attendance(request):
                 'WFH': 0,
                 'Leave': 0,
                 'Travel': 0,
+                'Others': 0,
             }
 
         # Increment the count based on attendance type
@@ -152,6 +153,7 @@ def daily_attendance(request):
         'WFH': sum(employee['WFH'] for employee in attendance_count.values()),
         'Leave': sum(employee['Leave'] for employee in attendance_count.values()),
         'Travel': sum(employee['Travel'] for employee in attendance_count.values()),
+        'Others': sum(employee['Others'] for employee in attendance_count.values()),
     }
 
     context = {
@@ -233,6 +235,7 @@ def staff_workmode_data(request):
             'WFH': work_modes.filter(attendance_type='WFH').count(),
             'Leave': work_modes.filter(attendance_type='Leave').count(),
             'Travel': work_modes.filter(attendance_type='Travel').count(),
+            'Others': work_modes.filter(attendance_type='Others').count(),
         }
 
         staff_data.append({
@@ -468,6 +471,7 @@ def weekly_attendance(request):
                 'WFH': 0,
                 'Leave': 0,
                 'Travel': 0,
+                'Others': 0,
             }
         
         # Increment the count based on attendance type
@@ -511,6 +515,7 @@ def monthly_attendance(request):
                     'WFH': 0,
                     'Leave': 0,
                     'Travel': 0,
+                    'Others': 0,
                 }
 
             # Increment the count based on attendance type
@@ -676,48 +681,47 @@ def generate_pay_slip(request, id_no):
     p.setDash(1, 2)  # Set the dash pattern: 1 point on, 2 points off
     p.line(310, height - 340, 510, height - 340)  # Draw the line
     p.setDash()  # Reset to solid line
-
     # Earnings Details
     p.setFont("Helvetica", 10)
     p.drawString(60, height - 360, "Basic  ")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 360, f"{staff_member.basic_salary:.2f}")
+    p.drawString(210, height - 360, f"{staff_member.basic_salary: ,.0f}")
     p.setFont("Helvetica", 10)
     p.drawString(60, height - 380, "House Rent Allowance ")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 380, f"{staff_member.hra:.2f}")
+    p.drawString(210, height - 380, f"{staff_member.hra:,.0f}")
     p.setFont("Helvetica", 10)
     p.drawString(60, height - 400, "Conveyance")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 400, f"{staff_member.conveyance:.2f}")
+    p.drawString(210, height - 400, f"{staff_member.conveyance:,.0f}")
     p.setFont("Helvetica", 10)
     p.drawString(60, height - 420, "Special Allowance")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 420, f"{staff_member.spl_allowance:.2f}")
+    p.drawString(210, height - 420, f"{staff_member.spl_allowance:,.0f}")
     p.setFont("Helvetica", 10)
     p.drawString(60, height - 440, "Incentives")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 440, f"{staff_member.incentive:.2f}")
+    p.drawString(210, height - 440, f"{staff_member.incentive:,.0f}")
 
 
     p.drawString(60,height-470, "Gross Earnings")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 470, f"{total_salary:.2f}")
+    p.drawString(210, height - 470, f"{total_salary:,.0f}")
 
     # Deductions Details
     p.setFont("Helvetica", 10)
     p.drawString(310, height - 360, "Income Tax")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(460, height - 360, "0.00")
+    p.drawString(460, height - 360, "0")
     p.setFont("Helvetica", 10)
     p.drawString(310, height - 380, "Provident Fund")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(460, height - 380, "0.00")
+    p.drawString(460, height - 380, "0")
 
     
     p.drawString(310, height - 470  , "Total Deductions")
     total_deductions = 0.00  # Assuming no deductions for now
-    p.drawString(460, height - 470, f"{total_deductions:.2f}")
+    p.drawString(460, height - 470, f"{total_deductions:.0f}")
         
 
     # Net Payable
@@ -812,8 +816,9 @@ def edit_earnings(request, id_no):
         staff.conveyance = request.POST['conveyance']
         staff.spl_allowance = request.POST['spl_allowance']
         staff.incentive = request.POST['incentive']
+        
         staff.save()
-        messages.success(request, 'Earnings updated successfully!')
+        messages.success(request, 'Data updated successfully!')
         return redirect('myApp:pay_slip')
         
     return render(request, 'myApp/edit_earnings.html', {'staff': staff})

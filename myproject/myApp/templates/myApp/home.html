@@ -133,27 +133,33 @@
             
             
             <!-- Flexbox container to hold the staff-specific work mode charts -->
+            <!-- Flexbox container to hold the staff-specific work mode charts -->
             <div class="charts-box">
-                <h1 style="text-align: center;">Staff Workmodes Summary</h1>
-                <div class="charts-row-staff" id="chartsContainer-staff">
-                    <!-- Staff-specific charts will be added dynamically here -->
-                </div>
-                <script src="{% static 'myproject/js/staff.js' %}"></script>
+              <h1 style="text-align: center;">Staff Workmodes Summary</h1>
+              <div class="charts-row-staff" id="chartsContainer-staff">
+                <!-- Staff-specific charts will be added dynamically here -->
+              </div>
+              <script src="{% static 'myproject/js/staff.js' %}"></script>
             </div>
             <style>
-                .charts-box {
+              .charts-box {
                     border: 1px solid #ccc; /* Add a border */
                     padding: 20px; /* Add some padding */
                     margin: 20px; /* Add some margin */
                     border-radius: 10px; /* Optional: Add rounded corners */
                     background-color: #f9f9f9; /* Optional: Add a background color */
                 }
-                .chart-title {
-                    text-align: center; /* Center align the title above the chart */
-                    margin-bottom: 10px; /* Space between title and chart */
-                    font-size: 1.2em; /* Increase font size for better visibility */
-}
-
+              .chart-title {
+                text-align: center; /* Center align the title above the chart */
+                margin-bottom: 20px; /* Space between title and chart */
+                font-size: 1.2em; /* Increase font size for better visibility */
+              }
+                .charts-row-staff {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px; /* Space between charts */
+              }
             </style>
             
         

@@ -32,6 +32,8 @@ from django.contrib import messages
 from .forms import LoginForm
 from .decorators import master_required 
 from .models import User
+from django.contrib.auth.models import Group
+
 
 @login_required
 @master_required  # Ensure only master users can access this view

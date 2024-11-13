@@ -123,17 +123,19 @@ header nav a {
             <div><span>House Rent Allowance:</span> <span>{{ staff_member.hra|floatformat:0 }}</span></div>
             <div><span>Conveyance:</span> <span>{{ staff_member.conveyance|floatformat:0 }}</span></div>
             <div><span>Special Allowance:</span> <span>{{ staff_member.spl_allowance|floatformat:0 }}</span></div>
-            <div><span>Incentives:</span> <span>{{ staff_member.incentive|floatformat:0 }}</span></div>
+            <div><span>Incentives:</span> <span>{{ total_incentive|floatformat:0 }}</span></div>
             <div><span>Gross Earnings:</span> <span>{{ total_salary|floatformat:0 }}</span></div>
         </div>
         <div class="deductions">
             <div><span>Income Tax:</span> <span>0.00</span></div>
             <div><span>Provident Fund:</span> <span>0.00</span></div>
-            <div><span>Total Deductions:</span> <span>0.00</span></div>
+            <div><span>Leave deductions</span> <span>{{ total_deductions|floatformat:0 }}</span></div>
+            <div><span>Total Deductions:</span> <span>{{ total_deductions|floatformat:0 }}</span></div>
         </div>
+        
 
         <div class="net-pay">
-            TOTAL NET PAYABLE: {{ total_salary|floatformat:2 }}
+            TOTAL NET PAYABLE: {{ pay_amount|floatformat:2 }}
         </div>
     </div>
 </body>

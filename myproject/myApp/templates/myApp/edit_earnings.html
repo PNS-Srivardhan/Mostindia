@@ -41,6 +41,13 @@
         <label for="medical">Monthly Incentive</label>
         <input type="text" id="incentive" name="incentive" value="{{ staff.incentive }}">
         
+        <div class="deductions-container">
+            <h2>Deductions</h2>
+
+            <label for="leave_deduction">Leave Deduction:</label>
+            <input type="text" id="leave_deduction" name="leave_deduction" value="{{ staff.leave_deduction }}">
+           
+        </div>
         
         <button type="submit">Save</button>
     </form>

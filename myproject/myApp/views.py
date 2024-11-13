@@ -101,8 +101,8 @@ def home(request):
                 'Leave': 0,
                 'Travel': 0,
                 'Others': 0,
+                'Paid_leave': 0,
             }
-
         # Increment the count based on attendance type
         if attendance_type in attendance_count[staff_id]:
             attendance_count[staff_id][attendance_type] += 1
@@ -115,6 +115,8 @@ def home(request):
         'Leave': sum(employee['Leave'] for employee in attendance_count.values()),
         'Travel': sum(employee['Travel'] for employee in attendance_count.values()),
         'Others': sum(employee['Others'] for employee in attendance_count.values()),
+        'Paid_leave': sum(employee['Paid_leave'] for employee in attendance_count.values()),    
+        
     }
 
     context = {
@@ -143,6 +145,7 @@ def daily_attendance(request):
                 'Leave': 0,
                 'Travel': 0,
                 'Others': 0,
+                'Paid_leave': 0,
             }
 
         # Increment the count based on attendance type
@@ -155,7 +158,8 @@ def daily_attendance(request):
         'WFH': sum(employee['WFH'] for employee in attendance_count.values()),
         'Leave': sum(employee['Leave'] for employee in attendance_count.values()),
         'Travel': sum(employee['Travel'] for employee in attendance_count.values()),
-        'Others': sum(employee['Others'] for employee in attendance_count.values()),
+        'Others': sum(employee['Others'] for employee in attendance_count.values()),\
+        'Paid_leave': sum(employee['Paid_leave'] for employee in attendance_count.values()),
     }
 
     context = {
@@ -238,6 +242,7 @@ def staff_workmode_data(request):
             'Leave': work_modes.filter(attendance_type='Leave').count(),
             'Travel': work_modes.filter(attendance_type='Travel').count(),
             'Others': work_modes.filter(attendance_type='Others').count(),
+            'Paid_leave': work_modes.filter(attendance_type='Paid_leave').count(),
         }
 
         staff_data.append({
@@ -255,6 +260,7 @@ def staff_workmode_data(request):
 def manage_staff(request):
     staff_list = Staff.objects.all()
     return render(request, 'myApp/managestaff.html', {'staff_list': staff_list})
+
 
 # View for adding new staff
 def add_staff(request):
@@ -474,6 +480,7 @@ def weekly_attendance(request):
                 'Leave': 0,
                 'Travel': 0,
                 'Others': 0,
+                'Paid_leave': 0,
             }
         
         # Increment the count based on attendance type
@@ -518,6 +525,7 @@ def monthly_attendance(request):
                     'Leave': 0,
                     'Travel': 0,
                     'Others': 0,
+                    'Paid_leave': 0,
                 }
 
             # Increment the count based on attendance type
@@ -629,8 +637,51 @@ def generate_pay_slip(request, id_no):
     p.setFont("Helvetica", 10)
     p.drawString(160, height - 240, f"{date.today().strftime('%d/%m/%Y')}")
 
-    # Salary Information
-    total_salary = staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + staff_member.incentive
+     # Calculate the total salary
+    # Calculate the number of days the staff member was in Onsite mode in the current month
+    year = date.today().year
+    month = date.today().month
+    onsite_days = Attendance.objects.filter(
+        staff=staff_member,
+        attendance_type='Onsite',
+        attendance_date__year=year,
+        attendance_date__month=month
+    ).count()
+
+    paid_leave_days = Attendance.objects.filter(
+        staff=staff_member,
+        attendance_type='Paid_Leave',
+        attendance_date__year=year,
+        attendance_date__month=month
+    ).count()
+
+
+    # Calculate the total incentive based on the number of Onsite days
+    total_incentive = staff_member.incentive * onsite_days
+    
+    # Calculate the total salary
+
+    paid_leave_days = Attendance.objects.filter(
+        staff=staff_member,
+        attendance_type='Paid_leave',
+        attendance_date__year=year,
+        attendance_date__month=month
+    ).count()
+
+
+    total_deductions = staff_member.leave_deduction * paid_leave_days
+
+    total_salary = (staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive) - total_deductions
+
+    salary = (staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive) 
+
+        
+
+
+    # Calculate the total salary
+
+
+
 
     # Draw a dotted box around the salary information
     p.setStrokeColor(colors.black)
@@ -701,14 +752,14 @@ def generate_pay_slip(request, id_no):
     p.setFont("Helvetica-Bold", 10)
     p.drawString(210, height - 420, f"{staff_member.spl_allowance:,.0f}")
     p.setFont("Helvetica", 10)
-    p.drawString(60, height - 440, "Incentives")
+    p.drawString(60, height - 440, "Total Incentive")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 440, f"{staff_member.incentive:,.0f}")
-
-
+    p.drawString(210, height - 440, f"{total_incentive:,.0f}")
     p.drawString(60,height-470, "Gross Earnings")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 470, f"{total_salary:,.0f}")
+    p.drawString(210, height - 470, f"{salary:,.0f}")
+
+
 
     # Deductions Details
     p.setFont("Helvetica", 10)
@@ -719,10 +770,13 @@ def generate_pay_slip(request, id_no):
     p.drawString(310, height - 380, "Provident Fund")
     p.setFont("Helvetica-Bold", 10)
     p.drawString(460, height - 380, "0")
+    p.setFont("Helvetica", 10)
+    p.drawString(310, height - 400, "Leave deduction")
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(460, height - 400, f"{total_deductions:,.0f}")
 
-    
+
     p.drawString(310, height - 470  , "Total Deductions")
-    total_deductions = 0.00  # Assuming no deductions for now
     p.drawString(460, height - 470, f"{total_deductions:.0f}")
         
 
@@ -778,7 +832,43 @@ def view_pay_slip(request, id_no):
     staff_member = Staff.objects.get(id_no=id_no)
 
     # Calculate the total salary
-    total_salary = staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + staff_member.incentive
+    # Calculate the number of days the staff member was in Onsite mode in the current month
+    year = date.today().year
+    month = date.today().month
+    onsite_days = Attendance.objects.filter(
+        staff=staff_member,
+        attendance_type='Onsite',
+        attendance_date__year=year,
+        attendance_date__month=month
+    ).count()
+
+    # Calculate the total incentive based on the number of Onsite days
+    total_incentive = staff_member.incentive * onsite_days
+
+
+    leave_days = Attendance.objects.filter(
+        staff=staff_member,
+        attendance_type='Leave',
+        attendance_date__year=year,
+        attendance_date__month=month
+    ).count()
+
+    paid_leave_days = Attendance.objects.filter(
+        staff=staff_member,
+        attendance_type='Paid_leave',
+        attendance_date__year=year,
+        attendance_date__month=month
+    ).count()
+
+
+    total_deductions = staff_member.leave_deduction * paid_leave_days
+
+
+    # Calculate the total salary
+    total_salary = (staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive) 
+
+    pay_amount  = total_salary - total_deductions
+    
     
 
     # Calculate the number of leave days in the current month for the staff member
@@ -793,7 +883,7 @@ def view_pay_slip(request, id_no):
 
     # Calculate the number of days in the current month
     num_days_in_month = monthrange(year, month)[1]
-    paid_days = num_days_in_month - leave_days
+    paid_days = num_days_in_month - (leave_days + paid_leave_days)
 
     # Prepare context for the template
     context = {
@@ -801,6 +891,9 @@ def view_pay_slip(request, id_no):
         'total_salary': total_salary,
         'leave_days': leave_days,
         'paid_days': paid_days,
+        'pay_amount': pay_amount,
+        'total_incentive': total_incentive,
+        'total_deductions': total_deductions,
         'current_month': date.today().strftime('%B %Y'),
         'pay_date': date.today().strftime('%d/%m/%Y'),
     }
@@ -818,6 +911,7 @@ def edit_earnings(request, id_no):
         staff.conveyance = request.POST['conveyance']
         staff.spl_allowance = request.POST['spl_allowance']
         staff.incentive = request.POST['incentive']
+        staff.leave_deduction = request.POST['leave_deduction']
         
         staff.save()
         messages.success(request, 'Data updated successfully!')

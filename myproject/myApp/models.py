@@ -42,7 +42,9 @@ class Staff(models.Model):
     conveyance = models.DecimalField(max_digits=10, decimal_places=2)
     spl_allowance = models.DecimalField(max_digits=10, decimal_places=2)
     incentive = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    leave_deduction = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     photo = models.ImageField(blank=True, null=True, editable=True, upload_to='staff_photos')
+
 
     def save(self, *args, **kwargs):
         if isinstance(self.photo, InMemoryUploadedFile):
@@ -71,6 +73,7 @@ class Attendance(models.Model):
             ('Leave', 'Leave'),
             ('Travel', 'Travel'),
             ('Others', 'Others'),
+            ('Paid_Leave', 'Paid_Leave'),
         ]
     )
     other_attendance_type = models.CharField(

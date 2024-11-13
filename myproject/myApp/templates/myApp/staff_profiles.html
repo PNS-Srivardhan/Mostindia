@@ -54,10 +54,25 @@
                         <p class="u-align-center u-text u-text-15" style="margin-top: 5px;">{{ staff_member.designation }}</p>
                         <a href="javascript:void(0);" class="u-btn u-btn-round u-button-style u-radius-10"
    style="margin-top: 10px; display: block; text-align: center; position: absolute; top: 340px; left: 50%; transform: translateX(-50%); padding: 5px 10px; font-size: 0.875rem;"
-   onclick="showBio('{{ staff_member.name }}', '{{ staff_member.designation }}', '{{ staff_member.qualification }}', '{{ staff_member.joining_date }}', '{{ staff_member.dob }}', '{{ staff_member.blood_group }}', '{{ staff_member.id_no }}', '{{ staff_member.aadhar }}', '{{ staff_member.pan }}', '{{ staff_member.email }}', '{{ staff_member.mobile }}', '{{ staff_member.emergency_contact }}', '{{ staff_member.address }}', '{{ staff_member.insurance_policy_no }}', '{{ staff_member.insurance_expiry }}', '{{ staff_member.basic_salary }}', '{{ staff_member.hra }}', '{{ staff_member.conveyance }}', '{{ staff_member.spl_allowance }}')">
+   onclick="showBio('{{ staff_member.name }}',
+    '{{ staff_member.designation }}', 
+    '{{ staff_member.qualification }}', 
+    '{{ staff_member.joining_date }}',
+     '{{ staff_member.dob }}', 
+     '{{ staff_member.blood_group }}',
+      '{{ staff_member.id_no }}', 
+      '{{ staff_member.aadhar }}', 
+      '{{ staff_member.pan }}', 
+      '{{ staff_member.email }}',
+       '{{ staff_member.mobile }}',
+        '{{ staff_member.emergency_contact }}', 
+        '{{ staff_member.address }}', 
+        '{{ staff_member.insurance_policy_no }}', 
+        '{{ staff_member.insurance_expiry }}', 
+        {% if user.is_superuser %}'{{ staff_member.basic_salary }}', '{{ staff_member.hra }}', '{{ staff_member.conveyance }}', '{{ staff_member.spl_allowance }}'{% else %}null, null, null, null{% endif %})">
+
    View Bio
 </a>
-
                     </div>
                 </div>
                 {% endfor %}
@@ -148,6 +163,7 @@
           <td style="border: 1px solid #ddd; padding: 8px;"><strong>Special Allowance:</strong></td>
           <td id="staffSplAllowance" style="border: 1px solid #ddd; padding: 8px;"></td>
         </tr>
+
       </table>
     <div style="text-align: center; margin-top: 20px;">
         <button onclick="printBio()" style="padding: 10px 20px; background-color: #478ac9; color: white; border: none; border-radius: 5px; cursor: pointer;">Print</button>

@@ -34,7 +34,9 @@
                     <div id="manageStaffDropdown" class="dropdown-content">
                       <a href="{% url 'myApp:staff_profiles' %}">Profiles</a>
                       <a href="{% url 'myApp:manage_staff' %}">Manage Staff</a>
+                      {% if user.is_superuser %}
                       <a href="{% url 'myApp:add_staff' %}">Add Staff</a>
+                      {% endif %}
                     </div>
                   </div>              
                   <!-- New Reports button with dropdown -->
@@ -48,13 +50,16 @@
                         <a href="{% url 'myApp:monthly_attendance' %}">Monthly Attendance</a>
                     </div>
                   </div>
-
+                  {% if user.is_superuser %}
                   <a href="{% url 'myApp:pay_slip' %}"><strong>Payslip</strong></a>
+                  {% endif %}
 
                   <div class="dropdown">
                     <a href="#" onclick="toggleDropdown('settingsDropdown', event)" class="dropbtn"><strong>User</strong></a>
                     <div id="settingsDropdown" class="dropdown-content">
+                        {% if user.is_superuser %}
                         <a href="{% url 'myApp:master' %}"><strong>Add user</strong></a>
+                        {% endif %}
                         <a href="{% url 'myApp:login' %}"><strong>Logout</strong></a>
                     </div>
                   </div>

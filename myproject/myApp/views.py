@@ -310,10 +310,14 @@ def edit_staff(request, id_no):
         staff.address = request.POST.get('address', '')
         staff.insurance_policy_no = request.POST.get('insurance_policy_no', '')
         staff.insurance_expiry = request.POST.get('insurance_expiry', None)
-        staff.basic_salary = request.POST['basic_salary']
-        staff.hra = request.POST['hra']
-        staff.conveyance = request.POST['conveyance']
-        staff.spl_allowance = request.POST['spl_allowance']
+        if request.user.is_superuser:
+            staff.basic_salary = request.POST['basic_salary']
+            staff.hra = request.POST['hra']
+            staff.conveyance = request.POST['conveyance']
+            staff.spl_allowance = request.POST['spl_allowance']
+        else:
+            messages.error(request, 'You do not have permission to edit this information.')
+            return redirect('myApp:manage_staff')
         if request.FILES.get('photo'):
             staff.photo = request.FILES['photo']
         staff.save()

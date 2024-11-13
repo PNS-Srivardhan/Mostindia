@@ -108,7 +108,7 @@
                 <label for="insurance_expiry">Insurance Expiry Date:</label>
                 <input type="date" id="insurance_expiry" name="insurance_expiry" class="form-control" value="{{ staff.insurance_expiry|date:'Y-m-d' }}">
             </div>
-
+            {% if user.is_superuser %}
             <h3>Salary Information</h3>
             <div class="form-group">
                 <label for="basic_salary">Basic Salary:</label>
@@ -116,7 +116,6 @@
             </div>
 
             <div class="form-group">
-                <label for="hra">HRA:</label>
                 <input type="text" id="hra" name="hra" class="form-control" value="{{ staff.hra }}">
             </div>
 
@@ -129,6 +128,7 @@
                 <label for="spl_allowance">Special Allowance:</label>
                 <input type="text" id="spl_allowance" name="spl_allowance" class="form-control" value="{{ staff.spl_allowance }}">
             </div>
+            {% endif %}
 
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary">Update Staff Details</button>

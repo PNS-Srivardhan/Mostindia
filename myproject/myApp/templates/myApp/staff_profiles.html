@@ -26,10 +26,9 @@
             <div style="margin-top: 20px;">
                 <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
                 <nav style="float: right;">
-                    <a href="{% url 'myApp:home' %}" style="margin-left: 1100px; top: 10px;">
-                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
+                    <a href="{% url 'myApp:home' %}" style="margin-left: 1000px; top: 60px; position: relative;"></a>
+                      <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
                     </a>
-                    
                 </nav>
         </div>
         </header>
@@ -69,7 +68,12 @@
         '{{ staff_member.address }}', 
         '{{ staff_member.insurance_policy_no }}', 
         '{{ staff_member.insurance_expiry }}', 
-        {% if user.is_superuser %}'{{ staff_member.basic_salary }}', '{{ staff_member.hra }}', '{{ staff_member.conveyance }}', '{{ staff_member.spl_allowance }}'{% else %}null, null, null, null{% endif %})">
+        {% if user.is_superuser %}
+        '{{ staff_member.basic_salary }}', 
+        '{{ staff_member.hra }}', 
+        '{{ staff_member.conveyance }}',
+         '{{ staff_member.spl_allowance }}'
+         {% endif %})">
 
    View Bio
 </a>
@@ -80,8 +84,8 @@
         </div>
     </div>
 </section>
-<div id="staffModal" class="modal" style="display:none; position: fixed; z-index: 1; padding-top: 60px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);padding-top: 70px;">
-    <div class="modal-content" style="background-color: #fff; margin: auto; padding: 20px; border-radius: 10px; width: 60%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+<div id="staffModal" class="modal" style="display:none; position: fixed; z-index: 1; padding-top: 80px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);padding-top: 70px;">
+    <div class="modal-content" style="background-color: #fff; margin: auto; padding: 40px; border-radius: 10px; width: 60%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
       <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
       
       <h2></h2>
@@ -147,6 +151,7 @@
           <td style="border: 1px solid #ddd; padding: 8px;"><strong>Insurance Expiry:</strong></td>
           <td id="staffInsuranceExpiry" style="border: 1px solid #ddd; padding: 8px;"></td>
         </tr>
+        {% if user.is_superuser %}
         <tr>
           <td style="border: 1px solid #ddd; padding: 8px;"><strong>Basic Salary:</strong></td>
           <td id="staffBasicSalary" style="border: 1px solid #ddd; padding: 8px;"></td>
@@ -163,7 +168,7 @@
           <td style="border: 1px solid #ddd; padding: 8px;"><strong>Special Allowance:</strong></td>
           <td id="staffSplAllowance" style="border: 1px solid #ddd; padding: 8px;"></td>
         </tr>
-
+        {% endif %}
       </table>
     <div style="text-align: center; margin-top: 20px;">
         <button onclick="printBio()" style="padding: 10px 20px; background-color: #478ac9; color: white; border: none; border-radius: 5px; cursor: pointer;">Print</button>

@@ -77,7 +77,7 @@ def login_view(request):
     return render(request, 'myApp/login.html')
 
 
-# _____________________________________________HOME PAGE_______________________________________________________
+# _____________________________________________HOMEPAGE_________________________________________________
 from django.shortcuts import render
 @login_required
 def home(request):
@@ -254,8 +254,7 @@ def staff_workmode_data(request):
 
 
 
-# _____________________________________________MANAGE_STAFF_______________________________________________________
-
+# _____________________________________________MANAGE_STAFF_____________________________________________
 # View for managing staff
 def manage_staff(request):
     staff_list = Staff.objects.all()
@@ -400,7 +399,7 @@ def staff_detail(request, staff_id):
 def staff_success(request):
     return render(request, 'myApp/staff_success.html')
 
-# _____________________________________________ATTENDANCE_______________________________________________________
+# _____________________________________________ATTENDANCE___________________________________________________
 # View for taking attendance page 
 
 def attendance(request):

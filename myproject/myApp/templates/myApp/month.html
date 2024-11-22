@@ -15,12 +15,22 @@
                         <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
                     </a>
                 </nav>
+            </div>
         </div>
-        </header>
+    </header>
 </head>
 <body>
     <h1>Monthly Attendance</h1>
-    <form method="GET" action="{% url 'myApp:monthly_attendance' %}">
+    <form method="POST" action="{% url 'myApp:monthly_attendance' %}">
+        {% csrf_token %}
+        <label for="year">Year:</label>
+        <select id="year" name="year" required>
+            <option value="">Select a year</option>
+            {% for y in years %}
+            <option value="{{ y }}">{{ y }}</option>
+            {% endfor %}
+        </select>
+        <label for="month">Month:</label>
         <select id="month" name="month" required>
             <option value="">Select a month</option>
             <option value="01">January</option>
@@ -38,6 +48,7 @@
         </select>
         <button type="submit">Submit</button>
     </form>
+    <p><strong> Records of : {{ selected_year }} - {{ selected_month }}</strong></p>
     {% if attendance_records %}
     <table>
         <thead>
@@ -49,7 +60,7 @@
                 <th>WFH</th>
                 <th>Leave</th>
                 <th>Travel</th>
-                <th>Paid_leave</th>
+                <th>Paid leave</th>
                 <th>Others</th>
             </tr>
         </thead>
@@ -63,7 +74,7 @@
                 <td>{{ counts.WFH }}</td>
                 <td>{{ counts.Leave }}</td>
                 <td>{{ counts.Travel }}</td>
-                <td>{{ counts.Paid_leave}}</td>
+                <td>{{ counts.Paid_leave }}</td>
                 <td>{{ counts.Others }}</td>
             </tr>
             {% endfor %}

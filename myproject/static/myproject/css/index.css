@@ -214,7 +214,7 @@ canvas {
 }
 
 .card:hover h3, .card:hover p {
-    color: #66A5AD;
+    color: #000000;
 }
 
 /* Style for dropdown */
@@ -244,7 +244,7 @@ canvas {
   }
   
   .dropdown-content a:hover {
-    background-color: #bfb6b6;
+    background-color: #ffffff;
   }
 
   /* Default dropdown styles */

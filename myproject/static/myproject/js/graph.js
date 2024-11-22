@@ -1,12 +1,15 @@
 // Define work modes and colors
-const workModes = ['Onsite', 'Offsite', 'WFH', 'Leave', 'Travel'];
+const workModes = ['Onsite', 'Offsite', 'WFH', 'Leave', 'Travel',  'Others', 'Paid_Leave'];
+
 
 const colors = {
     'Onsite': { backgroundColor: 'rgba(255, 99, 132, 0.2)', borderColor: 'rgba(255, 99, 132, 1)' },
     'Offsite': { backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 1)' },
     'WFH': { backgroundColor: 'rgba(255, 206, 86, 0.2)', borderColor: 'rgba(255, 206, 86, 1)' },
     'Leave': { backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)' },
-    'Travel': { backgroundColor: 'rgba(153, 102, 255, 0.2)', borderColor: 'rgba(153, 102, 255, 1)' }
+    'Travel': { backgroundColor: 'rgba(153, 102, 255, 0.2)', borderColor: 'rgba(153, 102, 255, 1)' },
+    'Others': { backgroundColor: 'rgba(255, 159, 64, 0.2)', borderColor: 'rgba(255, 159, 64, 1)' },
+    'Paid_Leave':{ backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)' }
 };
 
 // Fetch data and generate chart when the chart element is in view

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from datetime import datetime
 from django.contrib.auth import authenticate, login
 from .models import Staff
 from myApp.models import Staff
@@ -402,6 +403,8 @@ def staff_success(request):
 # _____________________________________________ATTENDANCE___________________________________________________
 # View for taking attendance page 
 
+from django import forms
+
 def attendance(request):
     staff_list = Staff.objects.all()
     return render(request, 'myApp/attendance.html', {'staff_list': staff_list})
@@ -496,51 +499,70 @@ def weekly_attendance(request):
     
     return render(request, 'myApp/weekly_attendance.html', context)
 
+class MonthYearForm(forms.Form):
+    month = forms.ChoiceField(choices=[(str(i), str(i)) for i in range(1, 13)], label="Month")
+    year = forms.ChoiceField(choices=[(str(i), str(i)) for i in range(2020, datetime.now().year + 1)], label="year")
+    years = [str(i) for i in range(2020, datetime.now().year + 1)]
+    label = "years"
 
 def monthly_attendance(request):
-    month = request.GET.get('month')
-    attendance_count = {}
-    attendance_records = []  # Initialize attendance_records as an empty list
+    years = [str(i) for i in range(2020, datetime.now().year + 1)]
+    year = datetime.now().year  # Initialize year with the current year
+    if request.method == 'POST':
+        form = MonthYearForm(request.POST)
+        if form.is_valid():
+            month = form.cleaned_data['month']
+            year = form.cleaned_data['year']
+            attendance_count = {}
+            attendance_records = []
 
-    if month and month.isdigit() and 1 <= int(month) <= 12:
-        # Determine the year from the current date
-        year = timezone.now().year
+            # Convert year to integer
+            year = int(year)
 
-        # Get the start and end date for the specified month
-        start_date = datetime(year, int(month), 1)
-        end_date = datetime(year, int(month) + 1, 1) if month != '12' else datetime(year + 1, 1, 1)
+            # Get the start and end date for the specified month
+            start_date = datetime(year, int(month), 1)
+            end_date = datetime(year, int(month) + 1, 1) if month != '12' else datetime(year + 1, 1, 1)
 
-        # Fetch attendance records for the specified month
-        attendance_records = Attendance.objects.filter(attendance_date__range=[start_date, end_date])
+            # Fetch attendance records for the specified month
+            attendance_records = Attendance.objects.filter(attendance_date__range=[start_date, end_date])
 
-        # Process attendance records to count attendance types per employee
-        for record in attendance_records:
-            staff_id = record.staff.id_no  # Assuming staff.id_no uniquely identifies each employee
-            attendance_type = record.attendance_type
-            
-            # Initialize the employee's attendance counts if not already done
-            if staff_id not in attendance_count:
-                attendance_count[staff_id] = {
-                    'name': record.staff.name,  # Store employee name
-                    'Onsite': 0,
-                    'Offsite': 0,
-                    'WFH': 0,
-                    'Leave': 0,
-                    'Travel': 0,
-                    'Others': 0,
-                    'Paid_leave': 0,
-                }
+            # Process attendance records to count attendance types per employee
+            for record in attendance_records:
+                staff_id = record.staff.id_no
+                attendance_type = record.attendance_type
 
-            # Increment the count based on attendance type
-            if attendance_type in attendance_count[staff_id]:
-                attendance_count[staff_id][attendance_type] += 1
+                if staff_id not in attendance_count:
+                    attendance_count[staff_id] = {
+                        'name': record.staff.name,
+                        'Onsite': 0,
+                        'Offsite': 0,
+                        'WFH': 0,
+                        'Leave': 0,
+                        'Travel': 0,
+                        'Others': 0,
+                        'Paid_leave': 0,
+                    }
+
+                if attendance_type in attendance_count[staff_id]:
+                    attendance_count[staff_id][attendance_type] += 1
+
+            context = {
+                'attendance_count': attendance_count,
+                'attendance_records': attendance_records,
+                'selected_year': year,
+                'selected_month': month,
+            }
+            return render(request, 'myApp/month.html', context)
+    else:
+        form = MonthYearForm()
 
     context = {
-        'attendance_count': attendance_count,
-        'attendance_records': attendance_records,  # Optional: if you want to use it in the template
+        'form': form,
+        'year': year,
+        'years':years,
     }
-    
-    return render(request, 'myApp/month.html', context)  # Updated template name
+
+    return render(request, 'myApp/month.html', context)
 
 
 
@@ -830,6 +852,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+
 def view_pay_slip(request, id_no):
     # Fetch the staff member based on the id_no
     staff_member = Staff.objects.get(id_no=id_no)
@@ -941,6 +964,7 @@ def send_pay_slip(request, id_no):
 
         messages.success(request, 'Pay slip sent successfully!')
         return redirect('myApp:pay_slip')
+
 
 
 

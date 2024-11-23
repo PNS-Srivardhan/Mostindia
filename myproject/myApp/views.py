@@ -953,7 +953,7 @@ def send_pay_slip(request, id_no):
         pdf_content = response.content
 
         # Create the email
-        subject = 'PAY_SLIP_FOR_THE_MONTH'
+        subject = 'Pay Slip Generated '
         html_message = render_to_string('myApp/email.html', {'staff_member': staff_member})
         plain_message = strip_tags(html_message)
         email = EmailMessage(subject, plain_message, to=[staff_member.email])

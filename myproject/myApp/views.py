@@ -310,6 +310,7 @@ def edit_staff(request, id_no):
         staff.address = request.POST.get('address', '')
         staff.insurance_policy_no = request.POST.get('insurance_policy_no', '')
         staff.insurance_expiry = request.POST.get('insurance_expiry', None)
+        staff.photo=request.POST.get('photo','')
         if request.user.is_superuser:
             staff.basic_salary = request.POST['basic_salary']
             staff.hra = request.POST['hra']
@@ -732,7 +733,7 @@ def generate_pay_slip(request, id_no):
         attendance_date__year=year,
         attendance_date__month=month
     ).count()
-    p.drawString(350, height - 250, f"LOP Days: {leave_days}")
+    p.drawString(350, height - 250, f"Casual Leaves: {leave_days}")
 
     # Calculate the number of days in the current month
     num_days_in_month = monthrange(year, month)[1]
@@ -871,7 +872,6 @@ def view_pay_slip(request, id_no):
     # Calculate the total incentive based on the number of Onsite days
     total_incentive = staff_member.incentive * onsite_days
 
-
     leave_days = Attendance.objects.filter(
         staff=staff_member,
         attendance_type='Leave',
@@ -907,6 +907,15 @@ def view_pay_slip(request, id_no):
         attendance_date__month=month
     ).count()
 
+    year = date.today().year
+    month = date.today().month
+    paid_leave_days = Attendance.objects.filter(
+        staff=staff_member,
+        attendance_type='Paid_leave',
+        attendance_date__year=year,
+        attendance_date__month=month
+    ).count()
+
     # Calculate the number of days in the current month
     num_days_in_month = monthrange(year, month)[1]
     paid_days = num_days_in_month - (leave_days + paid_leave_days)
@@ -920,6 +929,7 @@ def view_pay_slip(request, id_no):
         'pay_amount': pay_amount,
         'total_incentive': total_incentive,
         'total_deductions': total_deductions,
+        'paid_leave_days': paid_leave_days,
         'current_month': date.today().strftime('%B %Y'),
         'pay_date': date.today().strftime('%d/%m/%Y'),
     }

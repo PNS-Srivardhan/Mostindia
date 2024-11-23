@@ -2,8 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head></head>
-    <body>{% load static %}
-
+    <body>
         <header class="u-clearfix u-header u-header" id="sec-7bf3">
             <div class="u-clearfix u-sheet u-sheet-1">
                 <div style="margin-top: 20px;">
@@ -14,19 +13,13 @@
                         </a>
                         <a href="{% url 'myApp:manage_staff' %}" style="margin-left: 10px; top: 10px;">
                             <img src="{% static 'myproject/images/back.png' %}" alt="Another Icon" style="width: 24px; height: 24px;">
-                        </a>
-    
+                        </a>   
             </div>
             </header>
-
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Staff</title>
     <link rel="stylesheet" href="{% static 'myproject/css/edit_staff.css' %}">
-
-
     <div class="container">
         <h1>EDIT-STAFF-DETAILS</h1>
         <form method="POST" enctype="multipart/form-data">

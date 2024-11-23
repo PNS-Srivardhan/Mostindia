@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{% static 'myproject/css/manage_staff.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 
@@ -32,7 +31,7 @@
     <div class="main-content">
         <div class="table-container">
             <div style="display: flex; justify-content: flex-start;">
-                <h1>STAFF MANAGEMENT</h1>
+                <h1 style="text-align: center; width: 100%;">STAFF DETAILS</h1>
             </div>
 
 
@@ -59,11 +58,6 @@
                             
                             <button class="edit-button" onclick="editStaff('{{ Staff.id_no }}')">Edit</button>
                             <button class="delete-button" onclick="openDeleteModal('{{ Staff.id_no }}')">Delete</button>
-
-
-
-
-
                         </td>
                     </tr>
                     {% empty %}
@@ -117,11 +111,6 @@
     console.log(`Setting form action to: ${deleteForm.action}`);  // Debug
     $('#deleteModal').modal('show');
 }
-
-
-
-
-
     </script>
 </body>
 </html>

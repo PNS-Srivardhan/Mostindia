@@ -24,18 +24,18 @@ class Staff(models.Model):
     # id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=100)
     designation = models.CharField(max_length=100)
-    qualification = models.CharField(max_length=200, blank=True, null=True)
+    qualification = models.CharField(max_length=100, blank=True, null=True)
     joining_date = models.DateField(blank=True, null=True)
     dob = models.DateField()
     blood_group = models.CharField(max_length=3, blank=True, null=True)
-    id_no = models.CharField(max_length=50, unique=True)
+    id_no = models.CharField(max_length=10, unique=True)
     aadhar = models.CharField(max_length=12, unique=True, blank=False)
     pan = models.CharField(max_length=10, blank=True, null=True)
     email = models.EmailField(unique=True)
     mobile = models.CharField(max_length=15)
     emergency_contact = models.TextField(blank=True, null=True)
     address = models.TextField(blank=True, null=True)
-    insurance_policy_no = models.CharField(max_length=50, blank=True, null=True)
+    insurance_policy_no = models.CharField(max_length=20, blank=True, null=True)
     insurance_expiry = models.DateField(blank=True, null=True)
     basic_salary = models.DecimalField(max_digits=10, decimal_places=2)
     hra = models.DecimalField(max_digits=10, decimal_places=2)
@@ -44,7 +44,7 @@ class Staff(models.Model):
     incentive = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     leave_deduction = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     photo = models.ImageField(blank=True, null=True, editable=True, upload_to='staff_photos')
-
+    
 
     def save(self, *args, **kwargs):
         if isinstance(self.photo, InMemoryUploadedFile):

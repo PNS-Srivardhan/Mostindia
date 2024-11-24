@@ -404,9 +404,11 @@ def staff_success(request):
     return render(request, 'myApp/staff_success.html')
 
 def leave_limit(request):
-    staff_list = Staff.objects.values('id_no', 'name', 'designation', 'mobile','totalleaves')
+    staff_list = Staff.objects.values('id_no', 'name', 'designation', 'mobile', 'totalleaves')
+    current_year = timezone.now().year
+
     # Count the leave for every staff member
-    leave_counts = Attendance.objects.filter(attendance_type='Leave').values('staff__id_no').annotate(total_leaves=Count('attendance_type'))
+    leave_counts = Attendance.objects.filter(attendance_type='Leave', attendance_date__year=current_year).values('staff__id_no').annotate(total_leaves=Count('attendance_type'))
 
     # Create a dictionary to map staff id_no to their leave count
     leave_count_dict = {item['staff__id_no']: item['total_leaves'] for item in leave_counts}
@@ -416,7 +418,6 @@ def leave_limit(request):
         leave_count = leave_count_dict.get(staff['id_no'], 0)
         staff['leave_count'] = leave_count
         staff['remainingleaves'] = staff['totalleaves'] - leave_count
-
 
     return render(request, 'myApp/leave_limit.html', {'staff_list': staff_list})
 

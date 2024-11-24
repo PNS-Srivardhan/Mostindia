@@ -44,11 +44,10 @@
                   <div class="dropdown">
                     <a href="#" onclick="toggleDropdown('reportsDropdown', event)" class="dropbtn"><strong>Attendance</strong></a>
                     <div id="reportsDropdown" class="dropdown-content">
-                        <a href="{% url 'myApp:attendance' %}">Manage Attendance</a>
-
-                        <a href="{% url 'myApp:view_attendance' %}">Day-wise Attendance</a>
-                        <a href="{% url 'myApp:weekly_attendance' %}">Weekly Attendance</a>
-                        <a href="{% url 'myApp:monthly_attendance' %}">Monthly Attendance</a>
+                         <a href="{% url 'myApp:attendance' %}">Manage Attendance</a>
+                         <a href="{% url 'myApp:view_attendance' %}">Day-wise Attendance</a>
+                         <a href="{% url 'myApp:weekly_attendance' %}">Weekly Attendance</a>
+                         <a href="{% url 'myApp:monthly_attendance' %}">Monthly Attendance</a>
                     </div>
                   </div>
                   {% if user.is_superuser %}

@@ -37,7 +37,7 @@ class Staff(models.Model):
     address = models.TextField(blank=True, null=True)
     insurance_policy_no = models.CharField(max_length=20, blank=True, null=True)
     insurance_expiry = models.DateField(blank=True, null=True)
-    basic_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    basic_salary = models.DecimalField(max_digits=10, decimal_places=0,blank=True, null=True)   
     hra = models.DecimalField(max_digits=10, decimal_places=2)
     conveyance = models.DecimalField(max_digits=10, decimal_places=2)
     spl_allowance = models.DecimalField(max_digits=10, decimal_places=2)

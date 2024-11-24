@@ -285,7 +285,7 @@ def add_staff(request):
             hra=request.POST['hra'],
             conveyance=request.POST['conveyance'],
             spl_allowance=request.POST['spl_allowance'],
-            photo=request.FILES.get('photo', None),
+            photo=request.FILES.get('photo', None), 
         )
         staff.save()
         messages.success(request, 'Staff member added successfully!')
@@ -428,6 +428,7 @@ def attendance_success(request):
     return render(request, 'myApp/attendance_success.html')
 
 def attendance_view(request):
+
     if request.method == 'POST':
         attendance_date = request.POST.get('attendance_date', timezone.now().date())
         today = timezone.now().date()
@@ -457,12 +458,16 @@ def attendance_view(request):
 
         messages.success(request, 'Attendance recorded successfully!')
         return redirect('myApp:attendance_success')  # Redirect to the success page
+    
+    # Count the leave for every employee
     else:
         form = AttendanceForm()
 
     # Fetch today's attendance records to display
     attendance_records = Attendance.objects.filter(attendance_date=timezone.now().date())
     return render(request, 'myApp/attendance.html', {'form': form, 'attendance_records': attendance_records})
+
+
 
 def attendance_menu(request):
     return render(request, 'myApp/attendance_menu.html')
@@ -564,7 +569,6 @@ def monthly_attendance(request):
     }
 
     return render(request, 'myApp/month.html', context)
-
 
 
 

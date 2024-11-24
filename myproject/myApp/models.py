@@ -44,6 +44,8 @@ class Staff(models.Model):
     incentive = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     leave_deduction = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     photo = models.ImageField(blank=True, null=True, editable=True, upload_to='staff_photos')
+    totalleaves = models.DecimalField(max_digits=10, decimal_places=0,default=0)
+    remainingleaves = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     
 
     def save(self, *args, **kwargs):

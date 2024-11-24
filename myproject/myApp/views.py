@@ -286,6 +286,7 @@ def add_staff(request):
             conveyance=request.POST['conveyance'],
             spl_allowance=request.POST['spl_allowance'],
             photo=request.FILES.get('photo', None), 
+            totalleaves=request.POST['totalleaves'],
         )
         staff.save()
         messages.success(request, 'Staff member added successfully!')
@@ -316,6 +317,7 @@ def edit_staff(request, id_no):
             staff.hra = request.POST['hra']
             staff.conveyance = request.POST['conveyance']
             staff.spl_allowance = request.POST['spl_allowance']
+            staff.totalleaves = request.POST['totalleaves']
         else:
             messages.error(request, 'You do not have permission to edit this information.')
             return redirect('myApp:manage_staff')
@@ -400,6 +402,23 @@ def staff_detail(request, staff_id):
 
 def staff_success(request):
     return render(request, 'myApp/staff_success.html')
+
+def leave_limit(request):
+    staff_list = Staff.objects.values('id_no', 'name', 'designation', 'mobile','totalleaves')
+    # Count the leave for every staff member
+    leave_counts = Attendance.objects.filter(attendance_type='Leave').values('staff__id_no').annotate(total_leaves=Count('attendance_type'))
+
+    # Create a dictionary to map staff id_no to their leave count
+    leave_count_dict = {item['staff__id_no']: item['total_leaves'] for item in leave_counts}
+
+    # Add leave count and remaining leaves to each staff member in the staff_list
+    for staff in staff_list:
+        leave_count = leave_count_dict.get(staff['id_no'], 0)
+        staff['leave_count'] = leave_count
+        staff['remainingleaves'] = staff['totalleaves'] - leave_count
+
+
+    return render(request, 'myApp/leave_limit.html', {'staff_list': staff_list})
 
 # _____________________________________________ATTENDANCE___________________________________________________
 # View for taking attendance page 

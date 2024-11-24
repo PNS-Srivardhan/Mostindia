@@ -51,6 +51,7 @@ urlpatterns = [
     path('staff_profiles/view/<str:id_no>/', views.view_bio, name='view_bio'),
     path('bio/<int:id_no>/', views.view_bio, name='view_bio'),
     path('staff/sucess/', views.staff_success, name='staff_success'),
+    path('leave_limit/', views.leave_limit, name='leave_limit'),
     # path('', views.home, name='home'),  # Duplicate path removed
 
     #______________________________________________ATTENDANCE___________________________________________________________

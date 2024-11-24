@@ -36,6 +36,7 @@
                       <a href="{% url 'myApp:manage_staff' %}">Manage Staff</a>
                       {% if user.is_superuser %}
                       <a href="{% url 'myApp:add_staff' %}">Add Staff</a>
+                      <a href="{% url 'myApp:leave_limit' %}">Staff leave Data</a>
                       {% endif %}
                     </div>
                   </div>              

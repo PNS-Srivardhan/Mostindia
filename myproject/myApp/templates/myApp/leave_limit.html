@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff leave data</title>
+    <link rel="stylesheet" href="{% static 'myproject/css/attendance.css' %}">
+</head> 
+<body>
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 20px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto; float: left; margin-right: 30px;">
+                <nav style="float: right;">
+                    <a href="{% url 'myApp:home' %}" style="margin-left: 1100px; top: 10px;">
+                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px;">
+                    </a>
+                </nav>
+        </div>
+        </header>
+    <div class="main-content">
+        <h1>Staff Leave Data</h1>
+
+        <form method="GET" action="{% url 'myApp:leave_limit' %}">
+
+            {% csrf_token %}  <!-- Include CSRF token for security -->
+            {{ form.as_p }}
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Employee Name</th>
+                        <th>Total Leaves</th>
+                        <th>Remaining Leaves</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for staff in staff_list %}
+                    <tr>
+                        <td>{{ staff.id_no }}</td>
+                        <td>{{ staff.name }}</td>
+                        <td>{{staff.totalleaves}}</td>
+                        <td>{{staff.remainingleaves}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+
+    </div>
+</body>
+</html>

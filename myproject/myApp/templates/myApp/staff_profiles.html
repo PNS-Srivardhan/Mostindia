@@ -8,8 +8,6 @@
     <meta name="description" content="">
     <title>Mostindia</title>
     <link rel="icon" type="image/x-icon" href="{% static 'myproject/images/icon.png' %}">
-    <link rel="stylesheet" href="nicepage.css" media="screen">
-    <link rel="stylesheet" href="index.css" media="screen">
     <link rel="stylesheet" href="{% static 'myproject/css/nicepage.css' %}" media="screen">
     <link rel="stylesheet" href="{% static 'myproject/css/staff_profiles.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'myproject/js/jquery.js' %}" defer=""></script>
@@ -34,7 +32,7 @@
     <div class="u-clearfix u-sheet u-sheet-1">
         <div class="u-expanded-width u-list u-list-1">
             <div class="u-repeater u-repeater-1" style="display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 0px; margin-top: 100px;">
-              <h2 style="text-align: center; width: 100%; color: black;"><strong>STAFF PROFILES</strong></h2>
+              <h2 style="text-align: center; width: 100%; color: black; font-family: 'Times New Roman', serif;">STAFF PROFILES</h2>
             <div class="u-repeater u-repeater-1" style="display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px; margin-top: 20px;">
                 {% for staff_member in staff_members %}
                 <div class="u-align-center u-border-1 u-border-palette-1-base u-container-align-center u-container-style u-list-item u-opacity u-opacity-100 u-radius-20 u-repeater-item u-shape-round u-white u-list-item-2" style="width: 220px; height: 400px; background-color: #000; margin: 20px; flex: 0 0 220px;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="250">

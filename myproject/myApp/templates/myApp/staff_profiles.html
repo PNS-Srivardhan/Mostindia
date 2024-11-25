@@ -66,12 +66,11 @@
         '{{ staff_member.address }}', 
         '{{ staff_member.insurance_policy_no }}', 
         '{{ staff_member.insurance_expiry }}', 
-        {% if user.is_superuser %}
         '{{ staff_member.basic_salary }}', 
         '{{ staff_member.hra }}', 
         '{{ staff_member.conveyance }}',
          '{{ staff_member.spl_allowance }}'
-         {% endif %})">
+         )">
 
    View Bio
 </a>

@@ -22,46 +22,46 @@
 <body>
     <header class="u-clearfix u-header u-header" id="sec-7bf3">
         <div class="u-clearfix u-sheet u-sheet-1">
-            <div style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between;">
-                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 200px; height: auto ; padding-left: 0px;">
+            <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 180px; height: auto ; padding-left: 60px; padding-bottom: 10px;">
             </div>
             <div class="header-container">
                 <nav class="header-options">
-                  <a href="#home"><strong>Home</strong></a>
+                  <a href="#home">HOME</a>
               
                   <!-- Manage Staff with dropdown -->
                   <div class="dropdown">
-                    <a href="#" onclick="toggleDropdown('manageStaffDropdown', event)" class="dropbtn"><strong>Staff</strong></a>
+                    <a href="#" onclick="toggleDropdown('manageStaffDropdown', event)" class="dropbtn">STAFF</a>
                     <div id="manageStaffDropdown" class="dropdown-content">
-                      <a href="{% url 'myApp:staff_profiles' %}">Profiles</a>
-                      <a href="{% url 'myApp:manage_staff' %}">Manage Staff</a>
+                      <a href="{% url 'myApp:staff_profiles' %}">STAFF PROFILES</a>
+                      <a href="{% url 'myApp:manage_staff' %}">MANAGE STAFF</a>
                       {% if user.is_superuser %}
-                      <a href="{% url 'myApp:add_staff' %}">Add Staff</a>
-                      <a href="{% url 'myApp:leave_limit' %}">Staff leave Data</a>
+                      <a href="{% url 'myApp:add_staff' %}">ADD STAFF</a>
+                      <a href="{% url 'myApp:leave_limit' %}">STAFF LEAVE DATA</a>
                       {% endif %}
                     </div>
                   </div>              
                   <!-- New Reports button with dropdown -->
                   <div class="dropdown">
-                    <a href="#" onclick="toggleDropdown('reportsDropdown', event)" class="dropbtn"><strong>Attendance</strong></a>
+                    <a href="#" onclick="toggleDropdown('reportsDropdown', event)" class="dropbtn">ATTENDANCE</a>
                     <div id="reportsDropdown" class="dropdown-content">
-                         <a href="{% url 'myApp:attendance' %}">Manage Attendance</a>
-                         <a href="{% url 'myApp:view_attendance' %}">Day-wise Attendance</a>
-                         <a href="{% url 'myApp:weekly_attendance' %}">Weekly Attendance</a>
-                         <a href="{% url 'myApp:monthly_attendance' %}">Monthly Attendance</a>
+                         <a href="{% url 'myApp:attendance' %}">UPLOAD ATTENDANCE</a>
+                         <a href="{% url 'myApp:view_attendance' %}">DAY-WISE ATTENDANCE</a>
+                         <a href="{% url 'myApp:weekly_attendance' %}">WEEKLY ATTENDANCE</a>
+                         <a href="{% url 'myApp:monthly_attendance' %}">MONTHLY ATTENDANCE</a>
                     </div>
                   </div>
                   {% if user.is_superuser %}
-                  <a href="{% url 'myApp:pay_slip' %}"><strong>Payslip</strong></a>
+                  <a href="{% url 'myApp:pay_slip' %}">PAYSLIP</a>
                   {% endif %}
 
                   <div class="dropdown">
-                    <a href="#" onclick="toggleDropdown('settingsDropdown', event)" class="dropbtn"><strong>User</strong></a>
+                    <a href="#" onclick="toggleDropdown('settingsDropdown', event)" class="dropbtn">SETTINGS</a>
                     <div id="settingsDropdown" class="dropdown-content">
                         {% if user.is_superuser %}
-                        <a href="{% url 'myApp:master' %}"><strong>Add user</strong></a>
+                        <a href="{% url 'myApp:master' %}">ADD USER</a>
                         {% endif %}
-                        <a href="{% url 'myApp:login' %}"><strong>Logout</strong></a>
+                        <a href="{% url 'myApp:login' %}">LOGOUT</a>
                     </div>
                   </div>
             
@@ -84,27 +84,27 @@
             <div class="dashboard-container" >
                 <div class="dashboard-cards">
                     <div class="card">
-                        <h3>Onsite</h3>
+                        <h3 style="font-family: 'Times New Roman', serif;">ONSITE</h3>
                         <p id="onsite-count"><strong>{{ total_count.Onsite|default:"0" }}</strong></p>
                     </div>
                     <div class="card">
-                        <h3>Offsite</h3>
+                      <h3 style="font-family: 'Times New Roman', serif;">OFFSITE</h3>
                         <p id="offsite-count"><strong>{{ total_count.Offsite|default:"0" }}</strong></p>
                     </div>
                     <div class="card">
-                        <h3>WFH</h3>
+                      <h3 style="font-family: 'Times New Roman', serif;">WFH</h3>
                         <p id="wfh-count"><strong>{{ total_count.WFH|default:"0" }}</strong></p>
                     </div>
                     <div class="card">
-                        <h3>Leave</h3>
+                      <h3 style="font-family: 'Times New Roman', serif;">LEAVE</h3>
                         <p id="leave-count"><strong>{{ total_count.Leave|default:"0" }}</strong></p>
                     </div>
                     <div class="card">
-                        <h3>Travel</h3>
+                      <h3 style="font-family: 'Times New Roman', serif;">TRAVEL</h3>
                         <p id="travel-count"><strong>{{ total_count.Travel|default:"0" }}</strong></p>
                     </div>
                     <div class="card">
-                        <h3>Others</h3>
+                      <h3 style="font-family: 'Times New Roman', serif;">OTHERS</h3>
                         <p id="others-count"><strong>{{ total_count.Others|default:"0" }}</strong></p>
                     </div>
                 </div>

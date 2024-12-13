@@ -1,5 +1,5 @@
 # myApp/urls.py
-from django.urls import path
+from django.urls import path,re_path
 from . import views
 from django.conf import settings as django_settings
 from django.conf.urls.static import static
@@ -71,11 +71,12 @@ urlpatterns = [
     #______________________________________________PAY_SLIP___________________________________________________________
 
     path('pay_slip/', views.pay_slip, name='pay_slip'),
-    path('generate_pay_slip/<str:id_no>/', generate_pay_slip, name='generate_pay_slip'),
-    path('view_pay_slip/<str:id_no>/', view_pay_slip, name='view_pay_slip'),
-    path('edit_earnings/<str:id_no>/', views.edit_earnings, name='edit_earnings'),
+    re_path(r'^generate_pay_slip/(?P<id_no>.+)/$', views.generate_pay_slip, name='generate_pay_slip'),
+    re_path(r'^view_pay_slip/(?P<id_no>.+)/$', views.view_pay_slip, name='view_pay_slip'),
+    re_path(r'^edit_earnings/(?P<id_no>.+)/$', views.edit_earnings, name='edit_earnings'),
     path('staff_detail/<int:staff_id>/', views.staff_detail, name='staff_detail'),
-    path('send_pay_slip/<str:id_no>/', views.send_pay_slip, name='send_pay_slip'),
+    re_path(r'^send_pay_slip/(?P<id_no>.+)/$', views.send_pay_slip, name='send_pay_slip'),
+    
     
     #______________________________________________settings___________________________________________________________
     path('settings/', views.settings, name='settings'),

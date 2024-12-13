@@ -27,7 +27,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-# _____________________________________________LOGIN_______________________________________________________
+#___________________________________LOGIN__________________________________________
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import LoginForm
@@ -286,7 +286,7 @@ def add_staff(request):
             conveyance=request.POST['conveyance'],
             spl_allowance=request.POST['spl_allowance'],
             photo=request.FILES.get('photo', None), 
-            totalleaves=request.POST['totalleaves'],
+            totalleaves=request.POST.get('totalleaves', '0.0'),
         )
         staff.save()
         messages.success(request, 'Staff member added successfully!')
@@ -421,7 +421,7 @@ def leave_limit(request):
 
     return render(request, 'myApp/leave_limit.html', {'staff_list': staff_list})
 
-# _____________________________________________ATTENDANCE___________________________________________________
+# _____________________________________________ATTENDANCE_________________________________________________
 # View for taking attendance page 
 
 from django import forms
@@ -446,12 +446,18 @@ def attendance_staff_detail(request, staff_id):
 
 def attendance_success(request):
     return render(request, 'myApp/attendance_success.html')
+from django.utils import timezone
+from datetime import datetime
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from myApp.models import Staff, Attendance
+from myApp.forms import AttendanceForm  # Assuming you have a form for attendance
 
 def attendance_view(request):
-
     if request.method == 'POST':
         attendance_date = request.POST.get('attendance_date', timezone.now().date())
         today = timezone.now().date()
+
         # Convert attendance_date to a date object
         attendance_date_obj = datetime.strptime(attendance_date, '%Y-%m-%d').date()
 
@@ -460,32 +466,45 @@ def attendance_view(request):
             messages.error(request, 'Cannot record attendance for future dates.')
             return redirect('myApp:error')
 
-        # Loop through the staff members in the POST data
+        # Process attendance for each staff member
         staff_list = Staff.objects.all()  # Fetch all staff members
         for staff in staff_list:
             attendance_type = request.POST.get(f'attendance_type_{staff.id_no}')
             if attendance_type:
-                # Check if attendance already exists for the staff and date
                 attendance, created = Attendance.objects.get_or_create(
-                    staff=staff,  # Reference the staff instance
+                    staff=staff,
                     attendance_date=attendance_date,
                     defaults={'attendance_type': attendance_type}
                 )
-
                 if not created:
                     attendance.attendance_type = attendance_type
                     attendance.save()
 
         messages.success(request, 'Attendance recorded successfully!')
-        return redirect('myApp:attendance_success')  # Redirect to the success page
-    
-    # Count the leave for every employee
-    else:
-        form = AttendanceForm()
+        return redirect('myApp:attendance_success')
 
-    # Fetch today's attendance records to display
-    attendance_records = Attendance.objects.filter(attendance_date=timezone.now().date())
-    return render(request, 'myApp/attendance.html', {'form': form, 'attendance_records': attendance_records})
+    else:
+        # For GET request, fetch existing attendance records for the given date
+        attendance_date = request.GET.get('attendance_date', timezone.now().date())
+        attendance_date_obj = datetime.strptime(str(attendance_date), '%Y-%m-%d').date()
+
+        # Fetch existing attendance records
+        attendance_records = Attendance.objects.filter(attendance_date=attendance_date_obj)
+
+        # Create an initial data dictionary to prefill the form
+        initial_data = {}
+        for record in attendance_records:
+            initial_data[f'attendance_type_{record.staff.id_no}'] = record.attendance_type
+
+        # Pass initial data to the form
+        form = AttendanceForm(initial=initial_data)
+
+        # Render the form and existing attendance records
+        return render(request, 'myApp/attendance.html', {
+            'form': form,
+            'attendance_date': attendance_date,
+            'attendance_records': attendance_records
+        })
 
 
 
@@ -877,6 +896,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from urllib.parse import unquote
 
 def view_pay_slip(request, id_no):
     # Fetch the staff member based on the id_no
@@ -997,6 +1017,7 @@ def send_pay_slip(request, id_no):
         email.send()
 
         messages.success(request, 'Pay slip sent successfully!')
+        return redirect('myApp:attendance_success')
         return redirect('myApp:pay_slip')
 
 

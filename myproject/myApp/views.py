@@ -1,40 +1,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth import authenticate, login
-from .models import Staff
-from myApp.models import Staff
-from django.http import HttpResponse , JsonResponse
+from .models import Staff, Attendance, User
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 import base64
-from django.shortcuts import render, redirect
-from django.utils import timezone
-from .models import Attendance, Staff
-from .forms import AttendanceForm
-from datetime import datetime
-from django.shortcuts import render
-from django.utils import timezone
-from .models import Attendance, Staff
-from datetime import datetime
-from datetime import datetime
-from django.utils import timezone
+from django.utils.timezone import localtime, now
+from .forms import AttendanceForm, LoginForm
 from django.db.models import Count
-from myApp.models import Attendance
 from django import template
-from django.db.models import Count
-from datetime import timedelta
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-
-#___________________________________LOGIN__________________________________________
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import LoginForm
-from .decorators import master_required 
-from .models import User
+from .decorators import master_required
 from django.contrib.auth.models import Group
-
+from django.utils import timezone
+from datetime import datetime
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from myApp.models import Staff, Attendance
+from myApp.forms import AttendanceForm  # Assuming you have a form for attendance
 
 @login_required
 @master_required  # Ensure only master users can access this view
@@ -56,7 +40,7 @@ def add_user(request):
 
     return render(request, 'myApp/add_user.html')  # Form template for adding users
 
-
+@login_required
 def master_view(request):
     return render(request, 'myApp/master.html')
 
@@ -77,13 +61,23 @@ def login_view(request):
 
     return render(request, 'myApp/login.html')
 
-
 # _____________________________________________HOMEPAGE_________________________________________________
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.utils import timezone
+from .models import Attendance
+
 @login_required
 def home(request):
+    # Double-check user authentication (optional, for debugging purposes)
+    if not request.user.is_authenticated:
+        return redirect('login')  # Ensure redirect to login if not authenticated
+
     # Get today's date
-    today = timezone.now().date()
+    today = localtime(now()).date()
+
+    # Dictionary to store attendance counts per employee
     attendance_count = {}
     attendance_records = Attendance.objects.filter(attendance_date=today)
 
@@ -91,7 +85,7 @@ def home(request):
     for record in attendance_records:
         staff_id = record.staff.id_no  # Assuming staff.id_no uniquely identifies each employee
         attendance_type = record.attendance_type
-        
+
         # Initialize the employee's attendance counts if not already done
         if staff_id not in attendance_count:
             attendance_count[staff_id] = {
@@ -116,18 +110,17 @@ def home(request):
         'Leave': sum(employee['Leave'] for employee in attendance_count.values()),
         'Travel': sum(employee['Travel'] for employee in attendance_count.values()),
         'Others': sum(employee['Others'] for employee in attendance_count.values()),
-        'Paid_leave': sum(employee['Paid_leave'] for employee in attendance_count.values()),    
-        
+        'Paid_leave': sum(employee['Paid_leave'] for employee in attendance_count.values()),
     }
 
     context = {
         'total_count': total_count,  # Pass the total count to the template
     }
 
-    return render(request, 'myApp/home.html', context)
+    return render(request, 'myApp/home.html',context)   
 
 def daily_attendance(request):
-    today = timezone.now().date()
+    today = localtime(now()).date()
     attendance_count = {}
     attendance_records = Attendance.objects.filter(attendance_date=today)
 
@@ -171,8 +164,6 @@ def daily_attendance(request):
 
     return render(request, 'myApp/home.html', context)
 
-
-
 #------------------------------------graphs--------------------------------------------
 def chart_view(request):
     return render(request, 'attendance_chart.html')
@@ -189,7 +180,7 @@ def chart_data(request):
 
 def work_mode_chart_data(request):
     # Get today's date and the date 30 days ago
-    today = timezone.now().date()
+    today = localtime(now()).date()
     last_30_days = today - timedelta(days=30)
 
     # Query the attendance for the last 30 days, grouped by attendance_type
@@ -208,7 +199,7 @@ def work_mode_chart_data(request):
     return JsonResponse({'labels': labels, 'data': data})
 
 def individual_work_mode_data(request, work_mode):
-    today = timezone.now().date()
+    today = localtime(now()).date()
     start_of_month = today.replace(day=1)
 
     # Filter attendance for the current month for the specific work mode
@@ -226,7 +217,7 @@ def individual_work_mode_data(request, work_mode):
     return JsonResponse({'labels': labels, 'data': data})
 
 def staff_workmode_data(request):
-    today = timezone.now().date()
+    today = localtime(now()).date()
     start_of_month = today.replace(day=1)
     staff_data = []
 
@@ -253,16 +244,38 @@ def staff_workmode_data(request):
 
     return JsonResponse(staff_data, safe=False)
 
+def get_attendance_data(request, work_mode):
+    # Get the last 7 days
+    today = datetime.today().date()
+    last_7_days = [today - timedelta(days=i) for i in range(7)]
 
+    # Query the Attendance model for data based on the last 7 days
+    attendance_data = {}
+    for date in last_7_days:
+        attendance_data[date] = {}
 
-# _____________________________________________MANAGE_STAFF_____________________________________________
-# View for managing staff
+    # Get the attendance data for the given work_mode
+    staffs = User.objects.all()  # Get all staff members (or use a custom staff model)
+    for staff in staffs:
+        staff_data = []
+        for date in last_7_days:
+            # Get the count of staff attendance for each work mode on that date
+            count = Attendance.objects.filter(staff=staff, work_mode=work_mode, date=date).count()
+            attendance_data[date][staff.username] = count
+
+    # Prepare the data to send as response
+    data = {
+        'labels': [date.strftime('%Y-%m-%d') for date in last_7_days],
+        'data': [attendance_data[date] for date in last_7_days]
+    }
+
+    return JsonResponse(data)
+
+# _____________________________________________MANAGE_STAFF___________________________________________
 def manage_staff(request):
     staff_list = Staff.objects.all()
     return render(request, 'myApp/managestaff.html', {'staff_list': staff_list})
 
-
-# View for adding new staff
 def add_staff(request):
     if request.method == 'POST':
         staff = Staff(
@@ -293,7 +306,6 @@ def add_staff(request):
         return redirect('myApp:staff_success')
     return render(request, 'myApp/add_staff.html')
 
-# View for editing staff
 def edit_staff(request, id_no):
     staff = get_object_or_404(Staff, id_no=id_no)
     if request.method == 'POST':
@@ -344,7 +356,6 @@ def edit_staff_view(request, staff_id):
     
     return render(request, 'myApp/edit_staff.html', {'staff': staff})
 
-
 register = template.Library()
 
 @register.filter(name='b64encode')
@@ -353,8 +364,6 @@ def b64encode(value):
 
     return base64.b64encode(value).decode('utf-8')
 
-
-# View for deleting staff
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .models import Staff, Attendance
@@ -388,13 +397,10 @@ def delete_staff(request):
         messages.error(request, 'Invalid request method.')
         return redirect('myApp:manage_staff')
 
-
-
 def manage_staff_view(request):
     Staff_list = Staff.objects.all()
     Staff_list = Staff.objects.values('id_no', 'name', 'designation', 'mobile')
     return render(request,'myApp/manage_staff.html',{'Staff_list':Staff_list})
-
 
 def staff_detail(request, staff_id):
     staff = Staff.objects.get(id=staff_id)  # Fetch the staff member by ID
@@ -421,9 +427,7 @@ def leave_limit(request):
 
     return render(request, 'myApp/leave_limit.html', {'staff_list': staff_list})
 
-# _____________________________________________ATTENDANCE_________________________________________________
-# View for taking attendance page 
-
+#_____________________________________________ATTENDANCE_________________________________________________
 from django import forms
 
 def attendance(request):
@@ -446,17 +450,11 @@ def attendance_staff_detail(request, staff_id):
 
 def attendance_success(request):
     return render(request, 'myApp/attendance_success.html')
-from django.utils import timezone
-from datetime import datetime
-from django.shortcuts import redirect, render
-from django.contrib import messages
-from myApp.models import Staff, Attendance
-from myApp.forms import AttendanceForm  # Assuming you have a form for attendance
 
 def attendance_view(request):
     if request.method == 'POST':
         attendance_date = request.POST.get('attendance_date', timezone.now().date())
-        today = timezone.now().date()
+        today = localtime(now()).date()
 
         # Convert attendance_date to a date object
         attendance_date_obj = datetime.strptime(attendance_date, '%Y-%m-%d').date()
@@ -505,8 +503,6 @@ def attendance_view(request):
             'attendance_date': attendance_date,
             'attendance_records': attendance_records
         })
-
-
 
 def attendance_menu(request):
     return render(request, 'myApp/attendance_menu.html')
@@ -609,10 +605,60 @@ def monthly_attendance(request):
 
     return render(request, 'myApp/month.html', context)
 
+def staff_attendance_view(request):
+    staff_list = Staff.objects.all()
+    attendance_data = []
+    context = {'staff_list': staff_list}
 
+    if request.method == 'POST':
+        # Get form inputs
+        staff_id = request.POST.get('staff_id')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
 
+        # Validate inputs
+        if not (staff_id and start_date and end_date):
+            context['error_message'] = 'Please provide all required fields.'
+            return render(request, 'staff_attendance.html', context)
 
-# _____________________________________________STAFF_PROFILES_______________________________________________________
+        try:
+            # Convert start_date and end_date strings to datetime.date objects
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        except ValueError:
+            context['error_message'] = 'Invalid date format. Use YYYY-MM-DD.'
+            return render(request, 'staff_attendance.html', context)
+
+        if start_date > end_date:
+            context['error_message'] = 'Start date cannot be after the end date.'
+            return render(request, 'staff_attendance.html', context)
+
+        # Fetch the selected staff member
+        staff = get_object_or_404(Staff, id_no=staff_id)
+
+        # Fetch attendance records for the specified date range
+        attendance_records = Attendance.objects.filter(
+            staff=staff,
+            attendance_date__range=[start_date, end_date]
+        )
+
+        # Prepare attendance data
+        attendance_data = [
+            {'date': record.attendance_date, 'work_mode': record.attendance_type}
+            for record in attendance_records
+        ]
+
+        # Add fetched data to the context
+        context.update({
+            'staff': staff,
+            'attendance_data': attendance_data,
+            'start_date': start_date,
+            'end_date': end_date,
+        })
+
+    return render(request, 'myApp/staff_list.html', context)
+
+# _____________________________________________STAFF_PROFILES_________________________________________
 
 def staff_profiles(request):
     staff_members = Staff.objects.all()
@@ -623,8 +669,7 @@ def view_bio(request, id_no):
     staff = get_object_or_404(Staff, id_no=id_no)
     return render(request, 'view_bio.html', {'staff': staff})
 
-# _____________________________________________PAY_SLIP_______________________________________________________
-
+# _____________________________________________PAY_SLIP___________________________________________
 def pay_slip(request):
     return render(request, 'myApp/pay_slip.html')
 
@@ -635,13 +680,11 @@ def pay_slip(request):
     }
     return render(request, 'myApp/pay_slip.html', context)
 
-
-# views.py
-
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from .models import Staff
+from num2words import num2words
 
 def generate_pay_slip(request, id_no):
     # Fetch the staff member based on the id_no
@@ -679,25 +722,25 @@ def generate_pay_slip(request, id_no):
 
     p.setFont("Helvetica", 10)
     p.setFillColor(colors.grey)
-    p.drawString(65, height - 180, "Employee Name     :")
+    p.drawString(65, height - 180, "Employee ID           :")
     p.setFillColor(colors.black)
     p.setFont("Helvetica", 10)
-    p.drawString(160, height - 180, f"{staff_member.name}")
+    p.drawString(160, height - 180, f"{staff_member.id_no}")
 
 
     p.setFont("Helvetica", 10)
     p.setFillColor(colors.grey)
-    p.drawString(65, height - 200, f"Employee ID           :")
+    p.drawString(65, height - 200, f"Employee Name     :")
     p.setFillColor(colors.black)
     p.setFont("Helvetica", 10)
-    p.drawString(160, height - 200, f"{staff_member.id_no}")
+    p.drawString(160, height - 200, f"{staff_member.name}")
 
     p.setFont("Helvetica", 10)
     p.setFillColor(colors.grey)
-    p.drawString(65, height - 220, f"Pay Period              :")
+    p.drawString(65, height - 220, f"Designation            :")
     p.setFillColor(colors.black)
     p.setFont("Helvetica", 10)
-    p.drawString(160, height - 220, f"{current_month}")
+    p.drawString(160, height - 220, f"{staff_member.designation}")
 
     p.setFont("Helvetica", 10)
     p.setFillColor(colors.grey)
@@ -705,6 +748,13 @@ def generate_pay_slip(request, id_no):
     p.setFillColor(colors.black)
     p.setFont("Helvetica", 10)
     p.drawString(160, height - 240, f"{date.today().strftime('%d/%m/%Y')}")
+
+    p.setFont("Helvetica", 10)
+    p.setFillColor(colors.grey)
+    p.drawString(65, height - 260, f"Pay Period              :") 
+    p.setFillColor(colors.black)
+    p.setFont("Helvetica", 10)
+    p.drawString(160, height - 260, f"{current_month}")
 
      # Calculate the total salary
     # Calculate the number of days the staff member was in Onsite mode in the current month
@@ -737,19 +787,20 @@ def generate_pay_slip(request, id_no):
         attendance_date__month=month
     ).count()
 
+#***********************calculate the total salary********************************
+    salary = int((staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive))
 
-    total_deductions = staff_member.leave_deduction * paid_leave_days
+    total_deductions = int(staff_member.leave_deduction * paid_leave_days)+int(staff_member.income_tax + staff_member.pf)+int(staff_member.advance_amount)
 
-    total_salary = (staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive) - total_deductions
+    leave_deduction = int(staff_member.leave_deduction * paid_leave_days)
 
-    salary = (staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive) 
+    total_salary = int((staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive) - total_deductions)
+    
+    # Reset advance amount to 0 after calculations
+    staff_member.advance_amount = 0
+    staff_member.save()
 
-        
-
-
-    # Calculate the total salary
-
-
+#***********************************************************************************
 
 
     # Draw a dotted box around the salary information
@@ -776,12 +827,12 @@ def generate_pay_slip(request, id_no):
         attendance_date__year=year,
         attendance_date__month=month
     ).count()
-    p.drawString(350, height - 250, f"Casual Leaves: {leave_days}")
+    p.drawString(350, height - 250, f"Leaves: {paid_leave_days + leave_days}")
 
     # Calculate the number of days in the current month
     num_days_in_month = monthrange(year, month)[1]
     paid_days = num_days_in_month - leave_days
-    p.drawString(350, height - 230, f"Paid Days: {paid_days}")
+    p.drawString(350, height - 230, f"Paid Days: {paid_days -(paid_leave_days+leave_days)}")
 
     # Earnings and Deductions Table Headers
     # Draw a box around the Earnings and Deductions headers
@@ -805,9 +856,9 @@ def generate_pay_slip(request, id_no):
     p.setDash()  # Reset to solid line
     # Earnings Details
     p.setFont("Helvetica", 10)
-    p.drawString(60, height - 360, "Basic  ")
+    p.drawString(60, height - 360, "Basic Salary ")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(210, height - 360, f"{staff_member.basic_salary: ,.0f}")
+    p.drawString(210, height - 360, f"{staff_member.basic_salary:,.0f}")
     p.setFont("Helvetica", 10)
     p.drawString(60, height - 380, "House Rent Allowance ")
     p.setFont("Helvetica-Bold", 10)
@@ -834,15 +885,19 @@ def generate_pay_slip(request, id_no):
     p.setFont("Helvetica", 10)
     p.drawString(310, height - 360, "Income Tax")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(460, height - 360, "0")
+    p.drawString(460, height - 360, f"{staff_member.income_tax:,.0f}")
     p.setFont("Helvetica", 10)
     p.drawString(310, height - 380, "Provident Fund")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(460, height - 380, "0")
+    p.drawString(460, height - 380, f"{staff_member.pf:,.0f}")
     p.setFont("Helvetica", 10)
     p.drawString(310, height - 400, "Leave deduction")
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(460, height - 400, f"{total_deductions:,.0f}")
+    p.drawString(460, height - 400, f"{leave_deduction:,.0f}")
+    p.setFont("Helvetica", 10)
+    p.drawString(310, height - 420, "Advance Amount")
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(460, height - 420, f"{staff_member.advance_amount:,.0f}")
 
 
     p.drawString(310, height - 470  , "Total Deductions")
@@ -851,16 +906,17 @@ def generate_pay_slip(request, id_no):
 
     # Net Payable
     p.setFont("Helvetica-Bold", 12)
-    p.drawString(60, height - 540, "TOTAL NET PAYABLE")
-    p.setFont("Helvetica", 9)
-    p.drawString(60, height - 550, "Gross Earnings - Total Deductions")
-    p.setFont("Helvetica-Bold", 14)
+    p.drawString(60, height - 530, "TOTAL NET PAYABLE")
+    p.setFont("Helvetica-Oblique", 10)
+    p.drawString(60, height - 550, f"Amount:{num2words(total_salary, to='cardinal', lang='en').capitalize()} Rupees only")
+
+    
     
     # Set background color for the amount only
-    amount_x = 460
-    amount_y = height - 560
-    amount_width = 90
-    amount_height = 35
+    amount_x = 440
+    amount_y = height - 560  # Moved downward
+    amount_width = 110  # Extended right side
+    amount_height = 50  # top and bottom
     
     p.setFillColor(colors.lightgreen)
     p.setFillAlpha(0.5)  # Set opacity to 50%
@@ -869,20 +925,18 @@ def generate_pay_slip(request, id_no):
     # Reset fill color to black for text
     p.setFillAlpha(1)  # Reset opacity to 100%
     p.setFillColor(colors.black)
-    p.drawString(470, height - 548, f"{total_salary:,.2f}")
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(470, height - 540, f"{total_salary:,.2f}")
 
     # Draw a box around the Net Payable section
     p.setStrokeColor(colors.black)
     p.setLineWidth(1)
-    p.roundRect(50, height - 560, 500, 35, 10)
+    p.roundRect(50, height - 560, 500, 50, 10)
 
     p.showPage()
     p.save()
 
     return response
-
-
-# views.py
 
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
@@ -931,14 +985,16 @@ def view_pay_slip(request, id_no):
     ).count()
 
 
-    total_deductions = staff_member.leave_deduction * paid_leave_days
-
+    deductions = (int(staff_member.leave_deduction * paid_leave_days) )
 
     # Calculate the total salary
     total_salary = (staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive) 
 
+    total_deductions = (staff_member.income_tax + staff_member.pf + deductions + staff_member.advance_amount)+deductions
+
     pay_amount  = total_salary - total_deductions
     
+
     
 
     # Calculate the number of leave days in the current month for the staff member
@@ -976,11 +1032,10 @@ def view_pay_slip(request, id_no):
         'paid_leave_days': paid_leave_days,
         'current_month': date.today().strftime('%B %Y'),
         'pay_date': date.today().strftime('%d/%m/%Y'),
+        'deductions':deductions,
     }
 
     return render(request, 'myApp/payslip_view.html', context)
-
-
 
 def edit_earnings(request, id_no):
     staff = get_object_or_404(Staff, id_no=id_no)
@@ -992,6 +1047,9 @@ def edit_earnings(request, id_no):
         staff.spl_allowance = request.POST['spl_allowance']
         staff.incentive = request.POST['incentive']
         staff.leave_deduction = request.POST['leave_deduction']
+        staff.income_tax = request.POST['income_tax']
+        staff.pf = request.POST['pf']
+        staff.advance_amount = request.POST['advance_amount']
         
         staff.save()
         messages.success(request, 'Data updated successfully!')
@@ -1020,18 +1078,9 @@ def send_pay_slip(request, id_no):
         return redirect('myApp:attendance_success')
         return redirect('myApp:pay_slip')
 
-
-
-
-
-
-
-
-# _____________________________________________settings_______________________________________________________
+# _____________________________________________settings_____________________________________________
 def settings(request):
     return render(request, 'myApp/settings.html')
-
-#___________________________________________-Backup_______________________________________________________
 
 
 

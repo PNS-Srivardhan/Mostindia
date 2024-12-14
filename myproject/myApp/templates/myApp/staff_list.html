@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostindia</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'myproject/images/icon.png' %}">
+    <link rel="stylesheet" href="{% static 'myproject/css/month.css' %}">
+    <header class="u-clearfix u-header u-header" id="sec-7bf3">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div style="margin-top: 10px;">
+                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" 
+                style="width: 180px; height: auto ; padding-left: 60px; padding-bottom: 10px;">
+                <nav style="float: right;">
+                    <a href="{% url 'myApp:home' %}" style="width: 180px; height: auto ; padding-left: 1000px; padding-top: 10px">
+                        <img src="{% static 'myproject/images/home_icon.png' %}" alt="Home" style="width: 24px; height: 24px; padding-top: 10px;">
+                    </a>
+                </nav>
+        </div>
+        </header>
+</head>
+<body>
+    <h1 style="font-family: 'Times New Roman', serif;">STAFF ATTENDANCE</h1>
+
+    <!-- Form to Select Staff and Date Range -->
+    <form method="POST">
+        {% csrf_token %}
+        <label for="staff_id">Select Staff:</label>
+        <select name="staff_id" id="staff_id" required>
+            <option value="">--Select--</option>
+            {% for staff in staff_list %}
+                <option value="{{ staff.id_no }}">{{ staff.name }} ({{ staff.id_no }})</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" id="start_date" required>
+        <br><br>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date" id="end_date" required>
+        <br><br>
+
+        <button type="submit">View Attendance</button>
+    </form>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    <!-- Display Attendance Data -->
+    {% if attendance_data %}
+        <h2 style="text-align: center;">{{ staff.name }} ({{ staff.id_no }})</h2>
+        <p>Period: {{ start_date|date:"Y-m-d" }} to {{ end_date|date:"Y-m-d" }}</p>
+
+        <!-- Filter Input -->
+        <div style="text-align: center;">
+            <label for="workmode_filter">Filter by Work Mode:</label>
+            <select id="workmode_filter">
+            <option value="">--All Work Modes--</option>
+            <option value="Onsite">Onsite</option>
+            <option value="Offsite">Offsite</option>
+            <option value="WFH">Work from Home</option>
+            <option value="Leave">Leave</option>
+            <option value="Travel">Travel</option>
+            <option value="Others">Others</option>
+            <option value="Paid_Leave">Paid Leave</option>
+            </select>
+        </div>
+        <br><br>
+
+        <table id="attendance_table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Work Mode</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_data %}
+                    <tr>
+                        <td>{{ record.date|date:"Y-m-d" }}</td>
+                        <td>{{ record.work_mode }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif request.method == 'POST' %}
+        <p>No attendance records found for the selected period.</p>
+    {% endif %}
+
+    <script>
+        // JavaScript for filtering table by Work Mode
+        document.getElementById('workmode_filter').addEventListener('change', function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#attendance_table tbody tr');
+            
+            rows.forEach(row => {
+                const workModeCell = row.cells[1].textContent.toLowerCase();
+                if (filter === "" || workModeCell === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

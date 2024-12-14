@@ -1,5 +1,4 @@
 
-
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -7,6 +6,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-k-333_r4!^zv%&7v572!hui+*0(zfld475o+)9k30_n!1do=mf'
 
 DEBUG = True
+
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -23,15 +24,24 @@ INSTALLED_APPS = [
     'myApp',
 ]
 
+class DebugMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        print(f"Is user authenticated? {request.user.is_authenticated}")
+        return self.get_response(request)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Keep only one
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -75,7 +85,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
@@ -86,16 +96,18 @@ STATICFILES_DIRS = os.path.join(BASE_DIR , "static"),
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
+LOGIN_URL = '/login/'  # Replace with your actual login page URL
 LOGIN_REDIRECT_URL = 'myApp:home'
   # After login, go 
 
 # Email settings
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
 EMAIL_PORT = 587  # Typically 587 for TLS, 465 for SSL
 EMAIL_USE_TLS = True  # Use TLS
-EMAIL_HOST_USER ='srivardhan466@gmail.com'  # Replace with your email address
-EMAIL_HOST_PASSWORD = 'ontn ecvg ragm rdnm'  # Replace with your email password
+EMAIL_HOST_USER =''  # Replace with your email address
+EMAIL_HOST_PASSWORD = ''  # Replace with your email password
 
 
 

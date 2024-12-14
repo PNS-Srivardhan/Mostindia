@@ -46,6 +46,9 @@ class Staff(models.Model):
     photo = models.ImageField(blank=True, null=True, editable=True, upload_to='staff_photos')
     totalleaves = models.DecimalField(max_digits=10, decimal_places=0,default=0)
     remainingleaves = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    income_tax = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    pf = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    advance_amount = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     
 
     def save(self, *args, **kwargs):

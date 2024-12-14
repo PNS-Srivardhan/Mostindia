@@ -13,7 +13,7 @@ from myApp import views
 from .views import generate_pay_slip, pay_slip, view_pay_slip
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import home, daily_attendance, staff_profiles, view_bio, staff_success, attendance, view_attendance, attendance_staff_detail, attendance_menu, weekly_attendance, monthly_attendance, error, edit_earnings, settings,master_view
+from .views import home, daily_attendance, staff_profiles, view_bio, staff_success, attendance, view_attendance, attendance_staff_detail, attendance_menu, weekly_attendance, monthly_attendance, error, edit_earnings, settings, master_view, staff_attendance_view, add_user, leave_limit, send_pay_slip   
 app_name = 'myApp'  # This app_name should match in your templates
 
 from . import views 
@@ -27,13 +27,17 @@ urlpatterns = [
     path('master/', views.master_view, name='master'),
     path('add_user/', views.add_user, name='add_user'),
 
-    #______________________________________________ HOME________________________________________________________________
+    #________________________________HOME________________________________________________________________
     path('daily-attendance/', views.daily_attendance, name='daily_attendance'), 
     path('attendance-chart/', chart_view, name='attendance-chart'),
     path('attendance-chart-data/', chart_data, name='attendance-chart-data'),
     path('work-mode-chart-data/', work_mode_chart_data, name='work-mode-chart-data'),
     path('attendance-chart-data/<str:work_mode>/', individual_work_mode_data, name='individual-work-mode-data'),
     path('staff-workmode-data/', views.staff_workmode_data, name='staff_workmode_data'),
+     path('attendance-chart-data/<str:work_mode>/', views.get_attendance_data, name='attendance_chart_data'),
+
+
+
       
     #______________________________________________MANAGE_STAFF_______________________________________________________
     path('manage_staff/', views.manage_staff_view, name='manage_staff'),
@@ -65,6 +69,7 @@ urlpatterns = [
     path('weekly_attendance/', views.weekly_attendance, name='weekly_attendance'),
     path('month/', views.monthly_attendance, name='monthly_attendance'),
     path('error/', views.error, name='error'),
+    path('staff_attendance/', views.staff_attendance_view, name='staff_attendance_view'),
 
 
 

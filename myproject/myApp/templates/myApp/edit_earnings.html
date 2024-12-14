@@ -25,6 +25,7 @@
     <h1>Edit Earnings for {{ staff.name }}</h1>
     <form method="POST" action="{% url 'myApp:edit_earnings' staff.id_no %}">
         {% csrf_token %}
+        <h2>Earnings</h2>
         <label for="basic_salary">Basic Salary:</label>
         <input type="text" id="basic_salary" name="basic_salary" value="{{ staff.basic_salary }}">
         
@@ -37,15 +38,28 @@
         <label for="spl_allowance">Special Allowance:</label>
         <input type="text" id="spl_allowance" name="spl_allowance" value="{{ staff.spl_allowance }}">
 
-        <label for="medical">Monthly Incentive</label>
+        <label for="medical">Monthly Incentive:
+            <br><span style="font-size: 12px; font-style: italic;">Note: Enter the incentive per each day</span>
+        </label>
         <input type="text" id="incentive" name="incentive" value="{{ staff.incentive }}">
         
         <div class="deductions-container">
             <h2>Deductions</h2>
 
-            <label for="leave_deduction">Leave Deduction:</label>
+            <label for="leave_deduction">Leave Deduction:
+                <br><span style="font-size: 12px; font-style: italic;">Note: Enter the deduction amount for each leave taken by the employee.</span>
+            </label>
+            </label>
             <input type="text" id="leave_deduction" name="leave_deduction" value="{{ staff.leave_deduction }}">
-           
+
+            <label for="income_tax">Income Tax:</label>
+            <input type="text" id="income_tax" name="income_tax" value="{{ staff.income_tax }}">
+
+            <label for="pf">Provident Fund:</label> 
+            <input type="text" id="pf" name="pf" value="{{ staff.pf }}">
+
+            <label for="advance_amount">Advance Amount</label>
+            <input type="text" id="advance_amount" name="advance_amount" value="{{ staff.advance_amount }}">
         </div>
         
         <button type="submit">Save</button>

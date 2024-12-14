@@ -1,4 +1,4 @@
-{% load static %}
+    {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,14 +98,15 @@ header nav a {
 <body>
     <div class="container">
         <div class="header">
-            <h1>Pay Slip For the Month</h1>
+            <h1 style="font-family: 'Times New Roman', Times, serif;">Pay Slip For the Month</h1>
             <h2>{{ current_month }}</h2>
         </div>
 
         <div class="section-title">EMPLOYEE SUMMARY</div>
         <div class="details">
-            <div><span>Employee Name</span> <span>{{ staff_member.name }}</span></div>
             <div><span>Employee ID</span> <span>{{ staff_member.id_no }}</span></div>
+            <div><span>Employee Name</span> <span>{{ staff_member.name }}</span></div>
+            <div><span>Designation</span> <span>{{ staff_member.designation }}</span></div>
             <div><span>Pay Period</span> <span>{{ current_month }}</span></div>
         </div>
 
@@ -118,23 +119,24 @@ header nav a {
 
         <div class="section-title">EARNINGS AND DEDUCTIONS</div>
         <div class="earnings">
-            <div><span>Basic:</span> <span>{{ staff_member.basic_salary|floatformat:0}}</span></div>
+            <div><span>Basic Salary:</span> <span>{{ staff_member.basic_salary|floatformat:0}}</span></div>
             <div><span>House Rent Allowance:</span> <span>{{ staff_member.hra|floatformat:0 }}</span></div>
             <div><span>Conveyance:</span> <span>{{ staff_member.conveyance|floatformat:0 }}</span></div>
             <div><span>Special Allowance:</span> <span>{{ staff_member.spl_allowance|floatformat:0 }}</span></div>
             <div><span>Incentives:</span> <span>{{ total_incentive|floatformat:0 }}</span></div>
-            <div><span>Gross Earnings:</span> <span>{{ total_salary|floatformat:0 }}</span></div>
+            <div><span><strong>Gross Earnings:</strong></span> <span><strong>{{ total_salary|floatformat:0 }}</strong></span></div>
         </div>
         <div class="deductions">
-            <div><span>Income Tax:</span> <span>0.00</span></div>
-            <div><span>Provident Fund:</span> <span>0.00</span></div>
-            <div><span>Leave deductions</span> <span>{{ total_deductions|floatformat:0 }}</span></div>
-            <div><span>Total Deductions:</span> <span>{{ total_deductions|floatformat:0 }}</span></div>
+            <div><span>Income Tax:</span> <span>{{staff_member.income_tax|floatformat:0}}</span></div>
+            <div><span>Provident Fund:</span> <span>{{staff_member.pf|floatformat:0}}</span></div>
+            <div><span>Leave deductions</span> <span>{{deductions|floatformat:0 }}</span></div>
+            <div><span>Advance Amount</span><span>{{staff_member.advance_amount |floatformat:0}}</span></div>
+            <div><span><strong>Total Deductions:</strong></span> <span><strong>{{total_deductions|floatformat:0 }}</strong></span></div>
         </div>
         
 
         <div class="net-pay">
-            TOTAL NET PAYABLE: {{ pay_amount|floatformat:2 }}
+            TOTAL NET PAYABLE: {{ pay_amount|floatformat:0 }}
         </div>
     </div>
 </body>

@@ -2,195 +2,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mostindia</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'myproject/images/icon.png' %}">
-    <link rel="stylesheet" href="{% static 'myproject/css/index.css' %}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <script src="{% static 'myproject/js/chart.js' %}"></script>
-    <style>
-        #attendanceChart {
-            margin-top: 50px; /* Adjust the value as needed */
-            max-width: 600px; /* Set max width  MAIN */
-            max-height: 300px; /* Set max height */
-        }
-        
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mostindia</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'myproject/images/icon.png' %}">
+  <link rel="stylesheet" href="{% static 'myproject/css/index.css' %}">
+  <link rel="stylesheet" href="{% static 'myproject/css/chart1.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <script src="{% static 'myproject/js/chart.js' %}"></script>
 </head>
 <body>
-    <header class="u-clearfix u-header u-header" id="sec-7bf3">
-        <div class="u-clearfix u-sheet u-sheet-1">
-            <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
-                <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 180px; height: auto ; padding-left: 60px; padding-bottom: 10px;">
-            </div>
-            <div class="header-container">
-                <nav class="header-options">
-                  <a href="#home">HOME</a>
-              
-                  <!-- Manage Staff with dropdown -->
-                  <div class="dropdown">
-                    <a href="#" onclick="toggleDropdown('manageStaffDropdown', event)" class="dropbtn">STAFF</a>
-                    <div id="manageStaffDropdown" class="dropdown-content">
-                      <a href="{% url 'myApp:staff_profiles' %}">STAFF PROFILES</a>
-                      <a href="{% url 'myApp:manage_staff' %}">MANAGE STAFF</a>
-                      {% if user.is_superuser %}
-                      <a href="{% url 'myApp:add_staff' %}">ADD STAFF</a>
-                      <a href="{% url 'myApp:leave_limit' %}">STAFF LEAVE DATA</a>
-                      {% endif %}
-                    </div>
-                  </div>              
-                  <!-- New Reports button with dropdown -->
-                  <div class="dropdown">
-                    <a href="#" onclick="toggleDropdown('reportsDropdown', event)" class="dropbtn">ATTENDANCE</a>
-                    <div id="reportsDropdown" class="dropdown-content">
-                         <a href="{% url 'myApp:attendance' %}">UPLOAD ATTENDANCE</a>
-                         <a href="{% url 'myApp:view_attendance' %}">DAY-WISE ATTENDANCE</a>
-                         <a href="{% url 'myApp:weekly_attendance' %}">WEEKLY ATTENDANCE</a>
-                         <a href="{% url 'myApp:monthly_attendance' %}">MONTHLY ATTENDANCE</a>
-                    </div>
-                  </div>
-                  {% if user.is_superuser %}
-                  <a href="{% url 'myApp:pay_slip' %}">PAYSLIP</a>
-                  {% endif %}
+  <header class="u-clearfix u-header u-header" id="sec-7bf3">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
+        <img src="{% static 'myproject/images/logo.png' %}" class="u-logo-image u-logo-image-1" style="width: 180px; height: auto ; padding-left: 60px; padding-bottom: 10px;">
+      </div>
+      <div class="header-container">
+        <nav class="header-options">
+          <a href="#home">HOME</a>
+       
+        
+          <!-- Manage Staff with dropdown -->
+          <div class="dropdown">
+          <a href="#" onclick="toggleDropdown('manageStaffDropdown', event)" class="dropbtn">STAFF</a>
+          <div id="manageStaffDropdown" class="dropdown-content">
+            <a href="{% url 'myApp:staff_profiles' %}">STAFF PROFILES</a>
+            <a href="{% url 'myApp:manage_staff' %}">MANAGE STAFF</a>
+            {% if user.is_superuser %}
+            <a href="{% url 'myApp:add_staff' %}">ADD STAFF</a>
+            <a href="{% url 'myApp:leave_limit' %}">STAFF LEAVE DATA</a>
+            {% endif %}
+          </div>
+          </div>              
+          <!-- New Reports button with dropdown -->
+          <div class="dropdown">
+          <a href="#" onclick="toggleDropdown('reportsDropdown', event)" class="dropbtn">ATTENDANCE</a>
+          <div id="reportsDropdown" class="dropdown-content">
+             <a href="{% url 'myApp:attendance' %}">UPLOAD ATTENDANCE</a>
+             <a href="{% url 'myApp:view_attendance' %}">DAY-WISE ATTENDANCE</a>
+             <a href="{% url 'myApp:weekly_attendance' %}">WEEKLY ATTENDANCE</a>
+             <a href="{% url 'myApp:monthly_attendance' %}">MONTHLY ATTENDANCE</a>
+             <a href="{% url 'myApp:staff_attendance_view' %}">STAFF ATTENDANCE</a>
+          </div>
+          </div>
+          {% if user.is_superuser %}
+          <a href="{% url 'myApp:pay_slip' %}">PAYSLIP</a>
+          {% endif %}
 
-                  <div class="dropdown">
-                    <a href="#" onclick="toggleDropdown('settingsDropdown', event)" class="dropbtn">SETTINGS</a>
-                    <div id="settingsDropdown" class="dropdown-content">
-                        {% if user.is_superuser %}
-                        <a href="{% url 'myApp:master' %}">ADD USER</a>
-                        {% endif %}
-                        <a href="{% url 'myApp:login' %}">LOGOUT</a>
-                    </div>
-                  </div>
-            
-                  
-                </nav>
-              </div>
-              
-              
-                </div>
-                </div>
-                <div>
-                </div>
-            </div>
+          <div class="dropdown">
+          <a href="#" onclick="toggleDropdown('settingsDropdown', event)" class="dropbtn">SETTINGS</a>
+          <div id="settingsDropdown" class="dropdown-content">
+            {% if user.is_superuser %}
+            <a href="{% url 'myApp:master' %}">ADD USER</a>
+            {% endif %}
+            <a href="{% url 'myApp:login' %}">LOGOUT</a>
+          </div>
+          </div>
+      
+          
+        </nav>
         </div>
-    </header>
-    
-    <div class="main-content" style="display: flex; justify-content: flex-end;"></div>
-        <section id="home" style="margin-left: 80px; padding-top: 40px; padding-bottom: 0px;">
-            
-            <div class="dashboard-container" >
-                <div class="dashboard-cards">
-                    <div class="card">
-                        <h3 style="font-family: 'Times New Roman', serif;">ONSITE</h3>
-                        <p id="onsite-count"><strong>{{ total_count.Onsite|default:"0" }}</strong></p>
-                    </div>
-                    <div class="card">
-                      <h3 style="font-family: 'Times New Roman', serif;">OFFSITE</h3>
-                        <p id="offsite-count"><strong>{{ total_count.Offsite|default:"0" }}</strong></p>
-                    </div>
-                    <div class="card">
-                      <h3 style="font-family: 'Times New Roman', serif;">WFH</h3>
-                        <p id="wfh-count"><strong>{{ total_count.WFH|default:"0" }}</strong></p>
-                    </div>
-                    <div class="card">
-                      <h3 style="font-family: 'Times New Roman', serif;">LEAVE</h3>
-                        <p id="leave-count"><strong>{{ total_count.Leave|default:"0" }}</strong></p>
-                    </div>
-                    <div class="card">
-                      <h3 style="font-family: 'Times New Roman', serif;">TRAVEL</h3>
-                        <p id="travel-count"><strong>{{ total_count.Travel|default:"0" }}</strong></p>
-                    </div>
-                    <div class="card">
-                      <h3 style="font-family: 'Times New Roman', serif;">OTHERS</h3>
-                        <p id="others-count"><strong>{{ total_count.Others|default:"0" }}</strong></p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        
+        
+        </div>
+        </div>
+        <div>
+        </div>
+      </div>
     </div>
+  </header>
+  
+  <div class="main-content" style="display: flex; justify-content: flex-end;"></div>
+    <section id="home" style="margin-left: 80px; padding-top: 40px; padding-bottom: 0px;">
+      
+      <div class="dashboard-container" >
+        <div class="dashboard-cards">
+          <div class="card">
+            <h3 style="font-family: 'Times New Roman', serif;">ONSITE</h3>
+            <p id="onsite-count"><strong>{{ total_count.Onsite|default:"0" }}</strong></p>
+          </div>
+          <div class="card">
+            <h3 style="font-family: 'Times New Roman', serif;">OFFSITE</h3>
+            <p id="offsite-count"><strong>{{ total_count.Offsite|default:"0" }}</strong></p>
+          </div>
+          <div class="card">
+            <h3 style="font-family: 'Times New Roman', serif;">WFH</h3>
+            <p id="wfh-count"><strong>{{ total_count.WFH|default:"0" }}</strong></p>
+          </div>
+          <div class="card">
+            <h3 style="font-family: 'Times New Roman', serif;">LEAVE</h3>
+            <p id="leave-count"><strong>{{ total_count.Leave|default:"0" }}</strong></p>
+          </div>
+          <div class="card">
+            <h3 style="font-family: 'Times New Roman', serif;">TRAVEL</h3>
+            <p id="travel-count"><strong>{{ total_count.Travel|default:"0" }}</strong></p>
+          </div>
+          <div class="card">
+            <h3 style="font-family: 'Times New Roman', serif;">OTHERS</h3>
+            <p id="others-count"><strong>{{ total_count.Others|default:"0" }}</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 
-            <!-- Container for the first graph -->
-            <div style="display: flex; justify-content: center; padding-bottom: 30px; ">
-                <canvas id="attendanceChart"></canvas>
-            </div>
-            <script src="{% static 'myproject/js/chart.js' %}"></script>
-            
-            <!-- Flexbox container to hold the work mode summary charts -->
-            <div class="charts-box-1">
-                <h1 style="text-align: center;">WORKMODE SUMMARY OF THIS MONTH</h1>
-                <div class="charts-row" id="chartsContainer">
-                    <!-- Work mode charts will be added dynamically here -->
-                </div>
-                <script src="{% static 'myproject/js/graph.js' %}"></script>
-            </div>
-            <style>
-                .charts-box-1 {
-                    border: 1px solid #ccc; /* Add a border */
-                    padding: 20px; /* Add some padding */
-                    margin: 20px; /* Add some margin */
-                    border-radius: 10px; /* Optional: Add rounded corners */
-                    background-color: #f9f9f9; /* Optional: Add a background color */
-                }
-            </style>
-            
-            
-            <!-- Flexbox container to hold the staff-specific work mode charts -->
-            <!-- Flexbox container to hold the staff-specific work mode charts -->
-            <div class="charts-box">
-              <h1 style="text-align: center;">STAFF WORKMODE-WISE DATA</h1>
-              <div class="charts-row-staff" id="chartsContainer-staff">
-                <!-- Staff-specific charts will be added dynamically here -->
-              </div>
-              <script src="{% static 'myproject/js/staff.js' %}"></script>
-            </div>
-            <style>
-              .charts-box {
-                    border: 1px solid #ccc; /* Add a border */
-                    padding: 20px; /* Add some padding */
-                    margin: 20px; /* Add some margin */
-                    border-radius: 10px; /* Optional: Add rounded corners */
-                    background-color: #f9f9f9; /* Optional: Add a background color */
-                }
-              .chart-title {
-                text-align: center; /* Center align the title above the chart */
-                margin-bottom: 20px; /* Space between title and chart */
-                font-size: 1.2em; /* Increase font size for better visibility */
-              }
-                .charts-row-staff {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px; /* Space between charts */
-              }
-    .chart-container {
-        width: 45%;
-        margin: 25px;
-        display: inline-block;
-        vertical-align: top;
-    }
+      <!-- Container for the first graph -->
+      <div style="display: flex; justify-content: center; padding-bottom: 30px; ">
+        <canvas id="attendanceChart"></canvas>
+      </div>
+      <script src="{% static 'myproject/js/chart.js' %}"></script>
+      
+      <!-- Flexbox container to hold the work mode summary charts -->
+      <div class="charts-box-1">
+        <h1 style="text-align: center;">WORKMODE SUMMARY OF THIS MONTH</h1>
+        <div class="charts-row" id="chartsContainer">
+          <!-- Work mode charts will be added dynamically here -->
+        </div>
+        <script src="{% static 'myproject/js/graph.js' %}"></script>
+      </div>
+      
+      <!-- Flexbox container to hold the staff-specific work mode charts -->
+      <div class="charts-box">
+        <h1 style="text-align: center;">STAFF WORKMODE-WISE DATA</h1>
+        <div class="charts-row-staff" id="chartsContainer-staff">
+        </div>
+        <script src="{% static 'myproject/js/staff.js' %}"></script>
+      </div>
 
-    #chartsContainer {
-        text-align: center;
-    }
-            </style>
-            
-        
+      <div class="charts-box-3">
+        <h1 style="text-align: center;">STAFF ATTENDANCE DATA</h1>
+        <div class="charts-row-staff" id="chartsContainer-staff-3">
+        </div>
+        <script src="{% static 'myproject/js/week.js' %}"></script>
+      </div>
+                
+<style>
+        .charts-box {
+          border: 1px solid #ccc; /* Add a border */
+          padding: 20px; /* Add some padding */
+          margin: 20px; /* Add some margin */
+          border-radius: 10px; /* Optional: Add rounded corners */
+          background-color: #f9f9f9; /* Optional: Add a background color */
+        }
+        .chart-title {
+        text-align: center; /* Center align the title above the chart */
+        margin-bottom: 20px; /* Space between title and chart */
+        font-size: 1.2em; /* Increase font size for better visibility */
+        }
+        .charts-row-staff {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px; /* Space between charts */
+        }
+  .chart-container {
+    width: 45%;
+    margin: 25px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  #chartsContainer {
+    text-align: center;
+  }
+      </style>   
+
         </section>
-
-        
-</body>
 
 <footer style="background-color: #f1f1f1; padding: 20px; text-align: center; margin-top: 20px;">
-  <p>&copy; 2024 Mostindia. All rights reserved. | Designed by @update.com</p>
+  <p>&copy; 2024 Mostindia. All rights reserved.</p>
   <p>
-    <a href="#home">Home</a> |
-    <a href="https://mostindia.in/">About</a> |
-    <a href="https://mostindia.in/">Contact</a> |
-    <a href="https://mostindia.in/terms">Terms of Use</a> |
-    <a href="https://mostindia.in/privacy">Privacy Policy</a>
+  <a href="#home">Home</a> |
+  <a href="https://mostindia.in/">About</a> |
+  <a href="https://mostindia.in/">Contact</a> |
+  <a href="https://mostindia.in/terms">Terms of Use</a> |
+  <a href="https://mostindia.in/privacy">Privacy Policy</a>
   </p>
 </footer>
 </html>
@@ -205,20 +192,20 @@ function toggleDropdown(dropdownId, event) {
 window.onclick = function(event) {
   const dropdowns = document.getElementsByClassName("dropdown-content");
   for (let i = 0; i < dropdowns.length; i++) {
-    const openDropdown = dropdowns[i];
-    const dropbtn = openDropdown.previousElementSibling; // Button associated with each dropdown
+  const openDropdown = dropdowns[i];
+  const dropbtn = openDropdown.previousElementSibling; // Button associated with each dropdown
 
-    // Check if the click is outside both the dropdown and the button
-    if (openDropdown.style.display === "block" && !openDropdown.contains(event.target) && !dropbtn.contains(event.target)) {
-      openDropdown.style.display = "none";
-      console.log("Dropdown closed from outside click");
-    }
+  // Check if the click is outside both the dropdown and the button
+  if (openDropdown.style.display === "block" && !openDropdown.contains(event.target) && !dropbtn.contains(event.target)) {
+    openDropdown.style.display = "none";
+    console.log("Dropdown closed from outside click");
+  }
   }
 }
 
   </script>
 <script>
-    function toggleDropdown(dropdownId, event) {
+  function toggleDropdown(dropdownId, event) {
   event.preventDefault(); // Prevent default link behavior
   const dropdown = document.getElementById(dropdownId);
 
@@ -228,9 +215,9 @@ window.onclick = function(event) {
   // Check if dropdown goes off the right edge of the screen
   const rect = dropdown.getBoundingClientRect();
   if (rect.right > window.innerWidth) {
-    dropdown.classList.add('open-left');
+  dropdown.classList.add('open-left');
   } else {
-    dropdown.classList.remove('open-left');
+  dropdown.classList.remove('open-left');
   }
 }
 
@@ -238,14 +225,55 @@ window.onclick = function(event) {
 window.onclick = function(event) {
   const dropdowns = document.getElementsByClassName("dropdown-content");
   for (let i = 0; i < dropdowns.length; i++) {
-    const openDropdown = dropdowns[i];
-    const dropbtn = openDropdown.previousElementSibling; // Button associated with each dropdown
+  const openDropdown = dropdowns[i];
+  const dropbtn = openDropdown.previousElementSibling; // Button associated with each dropdown
 
-    // Check if the click is outside both the dropdown and the button
-    if (openDropdown.style.display === "block" && !openDropdown.contains(event.target) && !dropbtn.contains(event.target)) {
-      openDropdown.style.display = "none";
-    }
+  // Check if the click is outside both the dropdown and the button
+  if (openDropdown.style.display === "block" && !openDropdown.contains(event.target) && !dropbtn.contains(event.target)) {
+    openDropdown.style.display = "none";
+  }
   }
 }
 
 </script>
+<style>
+  #attendanceChart {
+    margin-top: 50px; /* Adjust the value as needed */
+    max-width: 600px; /* Set max width  MAIN */
+    max-height: 300px; /* Set max height */
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f4f4f4;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .open-left {
+    right: 0;
+    left: auto;
+  }
+</style>

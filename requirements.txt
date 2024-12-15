@@ -225,3 +225,8 @@ wrapt==1.16.0
 yarg==0.1.9
 your-package==1.0
 zopfli==0.2.3.post1
+--upgrade pip
+pywin32==305  # Specify a compatible version of pywin32
+rust
+maturin
+

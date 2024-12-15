@@ -20,6 +20,7 @@ from django.contrib import messages
 from myApp.models import Staff, Attendance
 from myApp.forms import AttendanceForm  # Assuming you have a form for attendance
 
+
 @login_required
 @master_required  # Ensure only master users can access this view
 def add_user(request):

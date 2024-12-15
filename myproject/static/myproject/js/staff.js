@@ -1,3 +1,5 @@
+console.log("JavaScript file is loaded successfully.");
+
 fetch('/staff-workmode-data/')
     .then(response => {
         if (!response.ok) {
@@ -6,6 +8,11 @@ fetch('/staff-workmode-data/')
         return response.json();
     })
     .then(data => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to the start of today
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 6); // Include today in the 7-day range
+
         data.forEach(staff => {
             const container = document.createElement('div');
             container.classList.add('chart-container'); // Add chart container class
@@ -23,13 +30,24 @@ fetch('/staff-workmode-data/')
             container.appendChild(canvas);
             container.appendChild(title); // Append title below the chart
 
-            document.getElementById('chartsContainer-staff').appendChild(container); // Append to the main container
+            document.getElementById('chartsContainer-staff-3').appendChild(container); // Append to the main container
+
+            // Filter work modes for the last seven days
+            const filteredWorkModes = Object.keys(staff.work_modes)
+                .filter(date => {
+                    const workModeDate = new Date(date);
+                    return workModeDate >= sevenDaysAgo && workModeDate <= today;
+                })
+                .reduce((obj, key) => {
+                    obj[key] = staff.work_modes[key];
+                    return obj;
+                }, {});
+
+            const workModeLabels = Object.keys(filteredWorkModes);
+            const workModeCounts = Object.values(filteredWorkModes);
 
             // Generate the chart
             const ctx = canvas.getContext('2d');
-            const workModeLabels = Object.keys(staff.work_modes);
-            const workModeCounts = Object.values(staff.work_modes);
-
             new Chart(ctx, {
                 type: 'bar',
                 data: {

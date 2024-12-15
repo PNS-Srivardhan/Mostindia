@@ -37,3 +37,26 @@ from django import forms
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=150, label="Username")
     password = forms.CharField(widget=forms.PasswordInput, label="Password")
+
+
+from django import forms
+
+from .models import Staff
+
+
+
+class StaffForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Staff
+
+        fields = [
+
+            'name', 'designation', 'qualification', 'joining_date', 'dob', 'blood_group', 'aadhar', 'pan', 'email', 
+
+            'mobile', 'emergency_contact', 'address', 'insurance_policy_no', 'insurance_expiry', 'photo', 'basic_salary', 
+
+            'hra', 'conveyance', 'spl_allowance', 'totalleaves'
+
+        ]

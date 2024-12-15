@@ -796,13 +796,7 @@ def generate_pay_slip(request, id_no):
 
     total_salary = int((staff_member.basic_salary + staff_member.hra + staff_member.conveyance + staff_member.spl_allowance + total_incentive) - total_deductions)
     
-    # Reset advance amount to 0 after calculations
-    staff_member.advance_amount = 0
-    staff_member.save()
-
-#***********************************************************************************
-
-
+#**********************************************************************************
     # Draw a dotted box around the salary information
     p.setStrokeColor(colors.black)
     p.setLineWidth(0.5)
@@ -935,7 +929,9 @@ def generate_pay_slip(request, id_no):
 
     p.showPage()
     p.save()
-
+    # Reset the advance amount after generating the pay slip
+    staff_member.advance_amount = 0
+    staff_member.save()
     return response
 
 from django.http import HttpResponse

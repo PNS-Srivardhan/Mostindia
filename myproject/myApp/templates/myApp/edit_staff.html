@@ -1,7 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head></head>
+    <head><script>
+        function showAlert(message, type) {
+            Swal.fire({
+                icon: type,
+                title: type === 'success' ? 'Success' : 'Error',
+                text: message,
+            });
+        }
+    </script></head>
     <body>
         <header class="u-clearfix u-header u-header" id="sec-7bf3">
             <div class="u-clearfix u-sheet u-sheet-1">
@@ -145,6 +153,11 @@
                 <button type="submit" class="btn btn-primary">Update Staff Details</button>
             </div></div>
         </form>
+        {% for message in messages %}
+        <script>
+            showAlert("{{ message }}", "{{ message.tags }}");
+        </script>
+    {% endfor %}
     </div>
 
 

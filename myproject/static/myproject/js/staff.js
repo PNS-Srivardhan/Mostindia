@@ -6,6 +6,7 @@ fetch('/staff-workmode-data/')
         return response.json();
     })
     .then(data => {
+        console.log('Received data-month:', data)
         data.forEach(staff => {
             const container = document.createElement('div');
             container.classList.add('chart-container'); // Add chart container class

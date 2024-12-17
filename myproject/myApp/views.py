@@ -41,6 +41,9 @@ def add_user(request):
 
     return render(request, 'myApp/home.html')  # Form template for adding users
 
+
+
+
 @login_required
 def master_view(request):
     return render(request, 'myApp/master.html')
@@ -242,35 +245,54 @@ def staff_workmode_data(request):
             'staff_name': staff.name,
             'work_modes': work_mode_counts
         })
+        #print("Returning data:", staff_data)
 
     return JsonResponse(staff_data, safe=False)
 
-def get_attendance_data(request, work_mode):
-    # Get the last 7 days
-    today = datetime.today().date()
-    last_7_days = [today - timedelta(days=i) for i in range(7)]
+from datetime import timedelta
+from django.utils.timezone import localtime
+from django.utils.timezone import now
+from django.http import JsonResponse
+from .models import Staff, Attendance
 
-    # Query the Attendance model for data based on the last 7 days
-    attendance_data = {}
-    for date in last_7_days:
-        attendance_data[date] = {}
+def staff_workmode_data_week(request):
+    today = localtime(now()).date()
+    start_of_week = today - timedelta(days=today.weekday())  # Get the start of the week (Monday)
+    
+    staff_data = []
 
-    # Get the attendance data for the given work_mode
-    staffs = User.objects.all()  # Get all staff members (or use a custom staff model)
-    for staff in staffs:
-        staff_data = []
-        for date in last_7_days:
-            # Get the count of staff attendance for each work mode on that date
-            count = Attendance.objects.filter(staff=staff, work_mode=work_mode, date=date).count()
-            attendance_data[date][staff.username] = count
+    # Fetch all staff members
+    staff_members = Staff.objects.all()
+    
+    for staff in staff_members:
+        # Filter attendance data for the last 7 days
+        work_modes = Attendance.objects.filter(staff=staff, attendance_date__gte=start_of_week)
 
-    # Prepare the data to send as response
-    data = {
-        'labels': [date.strftime('%Y-%m-%d') for date in last_7_days],
-        'data': [attendance_data[date] for date in last_7_days]
-    }
+        work_mode_counts = {
+            'Onsite': work_modes.filter(attendance_type='Onsite').count(),
+            'Offsite': work_modes.filter(attendance_type='Offsite').count(),
+            'WFH': work_modes.filter(attendance_type='WFH').count(),
+            'Leave': work_modes.filter(attendance_type='Leave').count(),
+            'Travel': work_modes.filter(attendance_type='Travel').count(),
+            'Others': work_modes.filter(attendance_type='Others').count(),
+            'Paid_leave': work_modes.filter(attendance_type='Paid_leave').count(),
+        }
 
-    return JsonResponse(data)
+        staff_data.append({
+            'staff_name': staff.name,
+            'work_modes': work_mode_counts
+        })
+
+    return JsonResponse(staff_data, safe=False)
+
+
+
+
+
+
+
+
+
 
 # _____________________________________________MANAGE_STAFF___________________________________________
 def manage_staff(request):

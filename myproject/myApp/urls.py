@@ -34,8 +34,7 @@ urlpatterns = [
     path('work-mode-chart-data/', work_mode_chart_data, name='work-mode-chart-data'),
     path('attendance-chart-data/<str:work_mode>/', individual_work_mode_data, name='individual-work-mode-data'),
     path('staff-workmode-data/', views.staff_workmode_data, name='staff_workmode_data'),
-     path('attendance-chart-data/<str:work_mode>/', views.get_attendance_data, name='attendance_chart_data'),
-
+    path('staff-workmode-data-week/', views.staff_workmode_data_week, name='staff_workmode_data_week'),
 
 
       

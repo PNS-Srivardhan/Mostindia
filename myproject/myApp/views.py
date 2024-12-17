@@ -39,7 +39,7 @@ def add_user(request):
         messages.success(request, f'{group_name.capitalize()} user added successfully.')
         return redirect('add_user')  # Redirect back to the add user page or wherever you prefer
 
-    return render(request, 'myApp/add_user.html')  # Form template for adding users
+    return render(request, 'myApp/home.html')  # Form template for adding users
 
 @login_required
 def master_view(request):

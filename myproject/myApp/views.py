@@ -43,8 +43,8 @@ from django.shortcuts import redirect
 
 def run_backup_script(request):
     """Run the database backup script."""
-    db_path = r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\db.sqlite3'  
-    backup_path = r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\backups' 
+    db_path = r'C:\Mostindia-main\Mostindia-main\myproject\db.sqlite3'  
+    backup_path = r'C:\Mostindia-main\Mostindia-main\myproject\backups' 
     try:
         # Ensure the backup directory exists
         if not os.path.exists(backup_path):
@@ -141,8 +141,8 @@ def update_backup(request):
     """Update the database backup and upload it to Google Drive."""
 
     initial_data = {
-        'db_path': r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\db.sqlite3',  # Set default database path
-        'backup_path': r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\backups'  # Set default backup directory
+        'db_path': r'C:\Mostindia-main\Mostindia-main\myproject\db.sqlite3',  # Set default database path
+        'backup_path': r'C:\Mostindia-main\Mostindia-main\myproject\backups'  # Set default backup directory
     }
     
     if request.method == 'POST':
@@ -183,7 +183,7 @@ def update_backup(request):
 def run_script(request):
     try:
         # Run the script using subprocess
-        subprocess.run(['python', r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\myApp\google_sheet.py'], check=True)
+        subprocess.run(['python', r'C:\Mostindia-main\Mostindia-main\myproject\myApp\google_sheet.py'], check=True)
         return HttpResponse("Script executed successfully!")
     except subprocess.CalledProcessError:
         return HttpResponse("An error occurred while running the script.")

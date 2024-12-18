@@ -20,6 +20,160 @@ from django.contrib import messages
 from myApp.models import Staff, Attendance
 from myApp.forms import AttendanceForm  # Assuming you have a form for attendance
 
+#_________________________BACK_UP_DATABASE_________________________________________
+
+# views.py
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from .forms import BackupForm
+import os
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+import pickle
+from datetime import datetime
+
+import os
+import shutil
+from datetime import datetime
+from django.http import HttpResponse
+from django.shortcuts import redirect
+
+def run_backup_script(request):
+    """Run the database backup script."""
+    db_path = r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\db.sqlite3'  # Correct database path
+    backup_path = r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\backups'  # Update with your backup directory path
+
+    try:
+        # Ensure the backup directory exists
+        if not os.path.exists(backup_path):
+            os.makedirs(backup_path)
+
+        # Generate backup file with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_filename = f'database_backup_{timestamp}.db'
+        backup_full_path = os.path.join(backup_path, backup_filename)
+
+        # Copy the database file
+        shutil.copy(db_path, backup_full_path)
+
+        # Confirm the file was created
+        if os.path.exists(backup_full_path):
+            message = f"Backup successful! Backup created at: {backup_full_path}"
+        else:
+            message = "Error: Backup file creation failed."
+
+    except Exception as e:
+        message = f"Error running backup script: {str(e)}"
+
+    # Return response or redirect
+    return HttpResponse(message)
+
+
+
+# Google Drive authentication scopes
+SCOPES = ['https://www.googleapis.com/auth/drive.file']
+
+# Define Google API Scopes
+SCOPES = ['https://www.googleapis.com/auth/drive.file']
+
+def authenticate_google_drive():
+    """Authenticate and return a Google Drive API service."""
+    creds = None
+
+    # Dynamic paths for credentials.json and token.pickle
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    credentials_path = os.path.join(BASE_DIR, 'credentials.json')
+    token_path = os.path.join(BASE_DIR, 'token.pickle')
+
+    # Check for existing token.pickle for saved credentials
+    if os.path.exists(token_path):
+        with open(token_path, 'rb') as token:
+            creds = pickle.load(token)
+
+    # If no valid credentials, log in and save the token
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                credentials_path, SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+        
+        # Save the new credentials to token.pickle
+        with open(token_path, 'wb') as token:
+            pickle.dump(creds, token)
+    
+    # Build and return the Google Drive API service
+    service = build('drive', 'v3', credentials=creds)
+    return service
+
+def upload_file_to_drive(service, file_name, file_path):
+    """Upload the file to Google Drive."""
+    file_metadata = {'name': file_name}
+    media = MediaFileUpload(file_path, mimetype='application/octet-stream')
+    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+    return file.get('id')
+
+def delete_old_backups(service, max_backups=3):
+    """Delete old backups if there are more than the specified max."""
+    # List all backup files (sorted by creation date)
+    results = service.files().list(q="name contains 'database_backup'", spaces='drive').execute()
+    items = results.get('files', [])
+
+    # If there are more backups than allowed, delete the oldest ones
+    if len(items) > max_backups:
+        # Sort backups by creation time (ascending)
+        items.sort(key=lambda x: x['createdTime'])
+
+        # Delete old backups
+        for item in items[:-max_backups]:
+            file_id = item['id']
+            service.files().delete(fileId=file_id).execute()
+            print(f"Deleted old backup: {item['name']} (ID: {file_id})")
+
+def update_backup(request):
+    """Update the database backup and upload it to Google Drive."""
+
+    initial_data = {
+        'db_path': r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\db.sqlite3',  # Set default database path
+        'backup_path': r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\backups'  # Set default backup directory
+    }
+    
+    if request.method == 'POST':
+        form = BackupForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            db_path = form.cleaned_data['db_path']
+            backup_path = form.cleaned_data['backup_path']
+            max_backups = form.cleaned_data['max_backups']
+
+            # Generate a unique backup file name with a timestamp
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_filename = f'db.sqlite3'
+            backup_full_path = os.path.join(backup_path, backup_filename)
+
+            # Copy the database file to create a backup
+            os.system(f'cp {db_path} {backup_full_path}')  # Or use shutil.copy() instead
+
+            # Authenticate with Google Drive
+            service = authenticate_google_drive()
+
+            # Delete old backups if there are more than the allowed number (max_backups)
+            delete_old_backups(service, max_backups)
+
+            # Upload the new backup to Google Drive
+            file_id = upload_file_to_drive(service, backup_filename, backup_full_path)
+
+            return HttpResponse(f"Database backup updated successfully! New File ID: {file_id}")
+    else:
+        form = BackupForm()
+
+    return render(request, 'myApp/backup_form.html', {'form': form})    
+
+#___________________________________________________________________________________
+
 
 @login_required
 @master_required  # Ensure only master users can access this view
@@ -173,8 +327,11 @@ def chart_view(request):
     return render(request, 'attendance_chart.html')
 
 def chart_data(request):
-    # Your logic for fetching attendance data and returning JSON
-    attendance_data = Attendance.objects.values('attendance_type').annotate(count=Count('attendance_type'))
+    # Get the current year
+    current_year = timezone.now().year
+
+    # Fetch attendance data for the current year and return JSON
+    attendance_data = Attendance.objects.filter(attendance_date__year=current_year).values('attendance_type').annotate(count=Count('attendance_type'))
     labels = []
     data = []
     for entry in attendance_data:
@@ -970,6 +1127,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from urllib.parse import unquote
+from django.conf import settings
 
 def view_pay_slip(request, id_no):
     # Fetch the staff member based on the id_no

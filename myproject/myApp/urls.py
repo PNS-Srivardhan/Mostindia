@@ -35,6 +35,9 @@ urlpatterns = [
     path('attendance-chart-data/<str:work_mode>/', individual_work_mode_data, name='individual-work-mode-data'),
     path('staff-workmode-data/', views.staff_workmode_data, name='staff_workmode_data'),
     path('staff-workmode-data-week/', views.staff_workmode_data_week, name='staff_workmode_data_week'),
+    path('update-backup/', views.update_backup, name='update_backup'),
+    path('update-backup/', views.update_backup, name='update_backup'),
+    path('run-backup/', views.run_backup_script, name='run-backup'),
 
 
       

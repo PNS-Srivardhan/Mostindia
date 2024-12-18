@@ -11,6 +11,14 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <script src="{% static 'myproject/js/chart.js' %}"></script>
+  <style>
+    #attendanceChart {
+        margin-top: 50px; /* Adjust the value as needed */
+        max-width: 600px; /* Set max width  MAIN */
+        max-height: 300px; /* Set max height */
+    }
+    
+</style>
 </head>
 <body>
   <header class="u-clearfix u-header u-header" id="sec-7bf3">
@@ -55,6 +63,7 @@
           <div id="settingsDropdown" class="dropdown-content">
             {% if user.is_superuser %}
             <a href="{% url 'myApp:master' %}">ADD USER</a>
+            <a href="{% url 'myApp:update_backup' %}">UPDATE BACKUP</a>
             {% endif %}
             <a href="{% url 'myApp:login' %}">LOGOUT</a>
           </div>
@@ -75,9 +84,10 @@
       
       <div class="dashboard-container" >
         <div class="dashboard-cards">
-          <div class="card">
+            <div class="card">
             <h3 style="font-family: 'Times New Roman', serif;">ONSITE</h3>
             <p id="onsite-count"><strong>{{ total_count.Onsite|default:"0" }}</strong></p>
+              </div>
           </div>
           <div class="card">
             <h3 style="font-family: 'Times New Roman', serif;">OFFSITE</h3>
@@ -99,6 +109,9 @@
             <h3 style="font-family: 'Times New Roman', serif;">OTHERS</h3>
             <p id="others-count"><strong>{{ total_count.Others|default:"0" }}</strong></p>
           </div>
+          <div class="card">
+            <h3 style="font-family: 'Times New Roman', serif;">PAID LEAVE</h3>
+            <p id="total-count"><strong>{{ total_count.Paid_leave|default:"0" }}</strong></p>
         </div>
       </div>
     </section>

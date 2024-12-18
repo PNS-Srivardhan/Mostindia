@@ -60,3 +60,29 @@ class StaffForm(forms.ModelForm):
             'hra', 'conveyance', 'spl_allowance', 'totalleaves'
 
         ]
+
+from django import forms
+
+class BackupForm(forms.Form):
+    email = forms.EmailField(label='Email ID', required=True)
+    
+    db_path = forms.CharField(
+        label='Database File Path', 
+        required=False, 
+        initial=r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\db.sqlite3',
+        widget=forms.HiddenInput()  # Hides the field from the front end
+    )
+    
+    backup_path = forms.CharField(
+        label='Backup Directory Path', 
+        required=False, 
+        initial=r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\backups',
+        widget=forms.HiddenInput()  # Hides the field from the front end
+    )
+    
+    max_backups = forms.IntegerField(
+        label='Maximum Backups', 
+        required=False, 
+        initial=5,  # Automatically set to 5
+        widget=forms.HiddenInput()  # Hides the field from the front end
+    )

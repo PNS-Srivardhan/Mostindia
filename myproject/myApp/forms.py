@@ -75,14 +75,14 @@ class BackupForm(forms.Form):
     db_path = forms.CharField(
         label='Database File Path', 
         required=False, 
-        initial=r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\db.sqlite3',
+        initial=r'C:\Mostindia-main\Mostindia-main\myproject\db.sqlite3',
         widget=forms.HiddenInput()  # Hides the field from the front end
     )
     
     backup_path = forms.CharField(
         label='Backup Directory Path', 
         required=False, 
-        initial=r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\backups',
+        initial=r'C:\Mostindia-main\Mostindia-main\myproject\backups',
         widget=forms.HiddenInput()  # Hides the field from the front end
     )
     

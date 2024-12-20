@@ -90,6 +90,6 @@ class BackupForm(forms.Form):
     max_backups = forms.IntegerField(
         label='Maximum Backups', 
         required=False, 
-        initial=5,  # Automatically set to 5
+        initial=3,  # Automatically set to 5
         widget=forms.HiddenInput()  # Hides the field from the front end
     )

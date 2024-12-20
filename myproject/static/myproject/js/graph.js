@@ -1,7 +1,6 @@
 // Define work modes and colors
 const workModes = ['Onsite', 'Offsite', 'WFH', 'Leave', 'Travel',  'Others', 'Paid_leave'];
 
-
 const colors = {
     'Onsite': { backgroundColor: 'rgba(255, 99, 132, 0.2)', borderColor: 'rgba(255, 99, 132, 1)' },
     'Offsite': { backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 1)' },
@@ -19,7 +18,7 @@ function createChart(workMode, data) {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: data.labels,
+            labels: data.labels.map(label => label.split(' ')[0]), // Use only the first part of the name
             datasets: [{
                 label: `${workMode} Count`,
                 data: data.data,
@@ -64,6 +63,8 @@ workModes.forEach(workMode => {
     // Create chart container and canvas for each work mode
     const container = document.createElement('div');
     container.classList.add('chart-container');
+    container.style.width = '100%'; // Set the width to 100%
+    container.style.height = '400px'; // Set a fixed height for the chart container
     
     const canvas = document.createElement('canvas');
     canvas.id = `${workMode}-chart`;

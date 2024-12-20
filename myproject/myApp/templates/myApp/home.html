@@ -81,7 +81,7 @@
   </header>
   
   <div class="main-content" style="display: flex; justify-content: flex-end;"></div>
-    <section id="home" style="margin-left: 80px; padding-top: 40px; padding-bottom: 0px;">
+    <section id="home" style="margin-left: 80px; padding-top: 40px; padding-bottom: 0px; margin-right: 80px;">
       
       <div class="dashboard-container" >
         <div class="dashboard-cards">
@@ -115,20 +115,32 @@
   </div>
 
       <!-- Container for the first graph -->
-      <div style="display: flex; justify-content: center; padding-bottom: 30px; ">
-        <canvas id="attendanceChart"></canvas>
+      <div style="display: flex; justify-content: space-between ; padding: 60px; border-radius: 10px;">
+        <div style="flex: 1; padding-right: 15px;">
+          <canvas id="attendanceChart"></canvas>
+        </div>
+        <div style="flex: 1; padding-left: 15px;">
+          <canvas id="attendanceChart_month"></canvas>
+        </div>
       </div>
       <script src="{% static 'myproject/js/chart.js' %}"></script>
+      <script src="{% static 'myproject/js/chart_month.js' %}"></script>
+      <style>
+        #attendanceChart_month {
+          margin-top: 50px; /* Adjust the value as needed */
+          max-width: 600px; /* Set max width  MAIN */
+          max-height: 300px;  /* Adjust the value as needed */
+
+        }
+      </style>
       
       <!-- Flexbox container to hold the work mode summary charts -->
-      <div class="charts-box-1">
+      <div class="charts-box-1" style="border: 1px solid #ccc; padding: 20px; margin: 20px; border-radius: 10px; background-color: #f9f9f9;">
         <h1 style="text-align: center;">WORKMODE SUMMARY OF THIS MONTH</h1>
         <div class="charts-row" id="chartsContainer">
-          <!-- Work mode charts will be added dynamically here -->
         </div>
         <script src="{% static 'myproject/js/graph.js' %}"></script>
       </div>
-      
       <!-- Flexbox container to hold the staff-specific work mode charts -->
       <div class="charts-box">
         <h1 style="text-align: center;">STAFF WORKMODE-WISE  MONTH DATA</h1>

@@ -70,7 +70,7 @@ class StaffForm(forms.ModelForm):
 from django import forms
 
 class BackupForm(forms.Form):
-    email = forms.EmailField(label='Email ID', required=True)
+    email = forms.EmailField(label='Email ID', required=False, initial='mostindia.sms@gmail.com',widget=forms.HiddenInput())
     
     db_path = forms.CharField(
         label='Database File Path', 
@@ -89,6 +89,6 @@ class BackupForm(forms.Form):
     max_backups = forms.IntegerField(
         label='Maximum Backups', 
         required=False, 
-        initial=5,  # Automatically set to 5
+        initial=3,  # Automatically set to 5
         widget=forms.HiddenInput()  # Hides the field from the front end
     )

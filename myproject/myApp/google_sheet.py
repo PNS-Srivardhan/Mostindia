@@ -111,6 +111,6 @@ def transfer_sqlite_to_google_sheets(db_path, json_file_path, share_email=None):
 if __name__ == "__main__":
     DB_PATH = r'C:\Mostindia-main\Mostindia-main\myproject\db.sqlite3' 
     JSON_FILE_PATH = r'C:\Mostindia-main\Mostindia-main\myproject\myApp\sheet.json'  # Path to your service account JSON
-    SHARE_EMAIL = "srivardhan0005@gmail.com"  # Email address to share the spreadsheet with (optional)
+    SHARE_EMAIL = "mostindia.sms@gmail.com"  # Email address to share the spreadsheet with (optional)
 
     transfer_sqlite_to_google_sheets(DB_PATH, JSON_FILE_PATH, SHARE_EMAIL)

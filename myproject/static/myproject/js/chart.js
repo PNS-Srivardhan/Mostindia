@@ -21,26 +21,30 @@ fetch("/attendance-chart-data/")
                     label: 'Attendance Type',
                     data: data.data,  // e.g., [15, 8, 5, 12, 3]
                     backgroundColor: [
-                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(255, 0, 0, 0.6)',
                         'rgba(75, 192, 192, 0.6)',
                         'rgba(255, 205, 86, 0.6)',
+                        'rgba(255, 0, 0, 0.6)',
                         'rgba(201, 203, 207, 0.6)',
                         'rgba(54, 162, 235, 0.6)'
-                    ],
-                    hoverBackgroundColor: [
-                        'rgba(255, 159, 64, 0.8)',
-                        'rgba(75, 192, 192, 0.8)',
-                        'rgba(255, 205, 86, 0.8)',
-                        'rgba(201, 203, 207, 0.8)',
-                        'rgba(54, 162, 235, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 205, 86, 1)',
-                        'rgba(201, 203, 207, 1)',
-                        'rgba(54, 162, 235, 1)'
-                    ],
+                        ],
+                        hoverBackgroundColor: [
+                        'rgba(255, 0, 0, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 205, 86, 0.6)',
+                        'rgba(255, 0, 0, 0.6)',
+                        'rgba(201, 203, 207, 0.6)',
+                        'rgba(54, 162, 235, 0.6)'
+        
+                        ],
+                        borderColor: [
+                        'rgba(255, 0, 0, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 205, 86, 0.6)',
+                        'rgba(255, 0, 0, 0.6)',
+                        'rgba(201, 203, 207, 0.6)',
+                        'rgba(54, 162, 235, 0.6)'
+                        ],
                     borderWidth: 2,
                     hoverOffset: 8  // Creates a 3D-like separation effect on hover
                 }]
@@ -50,11 +54,11 @@ fetch("/attendance-chart-data/")
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'top',
+                        position: 'right',
                     },
                     title: {
                         display: true,
-                        text: 'OVERALL WORKMODE DATA'  // Add your title text here
+                        text: 'OVERALL WORKMODE DATA - YEAR'   // Add your title text here
                     }
                 },
                 animation: {

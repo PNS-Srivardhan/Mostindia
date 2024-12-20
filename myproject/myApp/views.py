@@ -357,6 +357,22 @@ def chart_data(request):
         data.append(entry['count'])
     return JsonResponse({'labels': labels, 'data': data})
 
+
+def chart_data_month(request):
+        # Get the current month and year
+        current_date = timezone.now()
+        current_year = current_date.year
+        current_month = current_date.month
+
+        # Fetch attendance data for the current month and return JSON
+        attendance_data = Attendance.objects.filter(attendance_date__year=current_year, attendance_date__month=current_month).values('attendance_type').annotate(count=Count('attendance_type'))
+        labels = []
+        data = []
+        for entry in attendance_data:
+            labels.append(entry['attendance_type'])
+            data.append(entry['count'])
+        return JsonResponse({'labels': labels, 'data': data})
+
 def work_mode_chart_data(request):
     # Get today's date and the date 30 days ago
     today = localtime(now()).date()

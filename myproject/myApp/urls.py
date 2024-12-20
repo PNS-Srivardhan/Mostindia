@@ -39,6 +39,7 @@ urlpatterns = [
     path('update-backup/', views.update_backup, name='update_backup'),
     path('run-backup/', views.run_backup_script, name='run-backup'),
     path('run-script/', views.run_script, name='run_script'),
+    path('attendance-chart-data-month/', views.chart_data_month, name='attendance-chart-data-month'),
 
       
     #______________________________________________MANAGE_STAFF_______________________________________________________

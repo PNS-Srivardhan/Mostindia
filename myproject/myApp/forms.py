@@ -77,6 +77,7 @@ class BackupForm(forms.Form):
         required=False, 
         initial=r'C:\Mostindia-main\Mostindia-main\myproject\db.sqlite3',
         widget=forms.HiddenInput()  # Hides the field from the front end
+        ### widget=forms.HiddenInput()  # Hides the field from the front end
     )
     
     backup_path = forms.CharField(

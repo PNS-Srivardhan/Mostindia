@@ -26,7 +26,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 150px; /* Adjust this value as needed */
+            margin-top: 10px; /* Adjust this value as needed */
         }
 
         h1 {
@@ -127,7 +127,18 @@
 </header>
 
 <body>
-    <h2 style="padding: 90px 0; text-align: center;">Update Database Backup</h2>
+    <h2 style="padding: 20px 0; text-align: center;">Update Your Backup</h2>
+    <p style="text-align: center; font-size: 18px; font-weight: bold;">
+        INSTRUCTIONS
+    </p>
+    <ul style="font-size: 18px; list-style-type: none; padding: 0; text-align: center;">
+        <li>--> Make sure you have a good internet connection.</li>
+        <li>-->Do not close the browser while the backup is in progress.</li>
+        <li>-->Do not refresh the page while the backup is in progress.</li>
+        <li>-->Do not close the browser tab while the backup is in progress.</li>
+        <li> <span style="color: red; font-weight: bold; animation: highlight 1s infinite alternate;">Wait until a success message is displayed.</span></li>
+
+    </ul>   
     <div class="form-container">
         <form method="POST">
             {% csrf_token %}

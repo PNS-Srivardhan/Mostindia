@@ -41,6 +41,9 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
+def backup_success(request):
+    return render(request, 'myApp/backup_success.html')
+
 def run_backup_script(request):
     """Run the database backup script."""
     db_path = r'C:\Mostindia-main\Mostindia-main\myproject\db.sqlite3'  
@@ -173,7 +176,7 @@ def update_backup(request):
             # Upload the new backup to Google Drive
             file_id = upload_file_to_drive(service, backup_filename, backup_full_path)
 
-            return HttpResponse(f"Database backup updated successfully! New File ID: {file_id}")
+            return render(request, 'myApp/backup_sucess.html')
     else:
         form = BackupForm()
 
@@ -184,9 +187,9 @@ def run_script(request):
     try:
         # Run the script using subprocess
         subprocess.run(['python', r'C:\Mostindia-main\Mostindia-main\myproject\myApp\google_sheet.py'], check=True)
-        return HttpResponse("Script executed successfully!")
+        return render(request, 'myApp/backup_sucess.html')
     except subprocess.CalledProcessError:
-        return HttpResponse("An error occurred while running the script.")
+        return render(request, 'myApp/backup_error.html')
 #___________________________________________________________________________________
 
 

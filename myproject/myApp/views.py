@@ -15,12 +15,13 @@ from .decorators import master_required
 from django.contrib.auth.models import Group
 from django.utils import timezone
 from datetime import datetime
+import subprocess
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from myApp.models import Staff, Attendance
 from myApp.forms import AttendanceForm  # Assuming you have a form for attendance
 
-#_________________________BACK_UP_DATABASE_________________________________________
+#_________________________BACK_UP_DATABASE_Drive_________________________________________
 
 # views.py
 from django.shortcuts import render, redirect
@@ -29,6 +30,7 @@ from .forms import BackupForm
 import os
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
 from googleapiclient.http import MediaFileUpload
 import pickle
 from datetime import datetime
@@ -41,16 +43,15 @@ from django.shortcuts import redirect
 
 def run_backup_script(request):
     """Run the database backup script."""
-    db_path = r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\db.sqlite3'  # Correct database path
-    backup_path = r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\backups'  # Update with your backup directory path
-
+    db_path = r'C:\Mostindia-main\Mostindia-main\myproject\db.sqlite3'  
+    backup_path = r'C:\Mostindia-main\Mostindia-main\myproject\backups' 
     try:
         # Ensure the backup directory exists
         if not os.path.exists(backup_path):
             os.makedirs(backup_path)
 
         # Generate backup file with timestamp
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        timestamp = datetime.now().strftime('%Y%m%d')
         backup_filename = f'database_backup_{timestamp}.db'
         backup_full_path = os.path.join(backup_path, backup_filename)
 
@@ -125,7 +126,10 @@ def delete_old_backups(service, max_backups=3):
     # If there are more backups than allowed, delete the oldest ones
     if len(items) > max_backups:
         # Sort backups by creation time (ascending)
-        items.sort(key=lambda x: x['createdTime'])
+        if items and 'createdTime' in items[0]:
+            items.sort(key=lambda x: x['createdTime'])
+        else:
+            items.sort(key=lambda x: x['name'])  # Fallback to sorting by name if 'createdTime' is not available
 
         # Delete old backups
         for item in items[:-max_backups]:
@@ -137,8 +141,8 @@ def update_backup(request):
     """Update the database backup and upload it to Google Drive."""
 
     initial_data = {
-        'db_path': r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\db.sqlite3',  # Set default database path
-        'backup_path': r'C:\Users\ploke\OneDrive\Documents\Pictures\SMS\mos-main\myproject\backups'  # Set default backup directory
+        'db_path': r'C:\Mostindia-main\Mostindia-main\myproject\db.sqlite3',  # Set default database path
+        'backup_path': r'C:\Mostindia-main\Mostindia-main\myproject\backups'  # Set default backup directory
     }
     
     if request.method == 'POST':
@@ -149,9 +153,12 @@ def update_backup(request):
             backup_path = form.cleaned_data['backup_path']
             max_backups = form.cleaned_data['max_backups']
 
+            # Run the backup script first
+            run_backup_script(request)
+
             # Generate a unique backup file name with a timestamp
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            backup_filename = f'db.sqlite3'
+            timestamp = datetime.now().strftime('%Y%m%d')
+            backup_filename = f'database_backup_{timestamp}.db'                                 
             backup_full_path = os.path.join(backup_path, backup_filename)
 
             # Copy the database file to create a backup
@@ -170,8 +177,16 @@ def update_backup(request):
     else:
         form = BackupForm()
 
-    return render(request, 'myApp/backup_form.html', {'form': form})    
+    return render(request, 'myApp/backup_form.html', {'form': form})
 
+#_____________________________________________Backup_googlesheets_________________________________
+def run_script(request):
+    try:
+        # Run the script using subprocess
+        subprocess.run(['python', r'C:\Mostindia-main\Mostindia-main\myproject\myApp\google_sheet.py'], check=True)
+        return HttpResponse("Script executed successfully!")
+    except subprocess.CalledProcessError:
+        return HttpResponse("An error occurred while running the script.")
 #___________________________________________________________________________________
 
 
@@ -596,14 +611,22 @@ def leave_limit(request):
     # Count the leave for every staff member
     leave_counts = Attendance.objects.filter(attendance_type='Leave', attendance_date__year=current_year).values('staff__id_no').annotate(total_leaves=Count('attendance_type'))
 
+    # Calculate the number of Paid_leave days for each staff member
+    paid_leave_counts = Attendance.objects.filter(attendance_type='Paid_leave', attendance_date__year=current_year).values('staff__id_no').annotate(total_paid_leaves=Count('attendance_type'))
+
+    # Create a dictionary to map staff id_no to their paid leave count
+    paid_leave_count_dict = {item['staff__id_no']: item['total_paid_leaves'] for item in paid_leave_counts}
+
     # Create a dictionary to map staff id_no to their leave count
     leave_count_dict = {item['staff__id_no']: item['total_leaves'] for item in leave_counts}
 
     # Add leave count and remaining leaves to each staff member in the staff_list
     for staff in staff_list:
         leave_count = leave_count_dict.get(staff['id_no'], 0)
+        paid_leave_count = paid_leave_count_dict.get(staff['id_no'], 0)
         staff['leave_count'] = leave_count
-        staff['remainingleaves'] = staff['totalleaves'] - leave_count
+        staff['paid_leave'] = paid_leave_count
+        staff['remainingleaves'] = staff['totalleaves'] - leave_count - paid_leave_count
 
     return render(request, 'myApp/leave_limit.html', {'staff_list': staff_list})
 
@@ -648,14 +671,16 @@ def attendance_view(request):
         staff_list = Staff.objects.all()  # Fetch all staff members
         for staff in staff_list:
             attendance_type = request.POST.get(f'attendance_type_{staff.id_no}')
+            location = request.POST.get(f'location_{staff.id_no}')  # Get location from the form
             if attendance_type:
                 attendance, created = Attendance.objects.get_or_create(
                     staff=staff,
                     attendance_date=attendance_date,
-                    defaults={'attendance_type': attendance_type}
+                    defaults={'attendance_type': attendance_type, 'location': location}
                 )
                 if not created:
                     attendance.attendance_type = attendance_type
+                    attendance.location = location  # Update location if attendance already exists
                     attendance.save()
 
         messages.success(request, 'Attendance recorded successfully!')
@@ -824,7 +849,7 @@ def staff_attendance_view(request):
 
         # Prepare attendance data
         attendance_data = [
-            {'date': record.attendance_date, 'work_mode': record.attendance_type}
+            {'date': record.attendance_date, 'work_mode': record.attendance_type,'location':record.location}
             for record in attendance_records
         ]
 

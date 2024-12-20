@@ -76,6 +76,7 @@
                 <tr>
                     <th>Date</th>
                     <th>Work Mode</th>
+                    <th>Location</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,6 +84,7 @@
                     <tr>
                         <td>{{ record.date|date:"Y-m-d" }}</td>
                         <td>{{ record.work_mode }}</td>
+                        <td>{{ record.location}}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -107,5 +109,7 @@
             });
         });
     </script>
+
+    
 </body>
 </html>

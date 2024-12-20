@@ -63,7 +63,8 @@
           <div id="settingsDropdown" class="dropdown-content">
             {% if user.is_superuser %}
             <a href="{% url 'myApp:master' %}">ADD USER</a>
-            <a href="{% url 'myApp:update_backup' %}">UPDATE BACKUP</a>
+            <a href="{% url 'myApp:update_backup' %}">BACKUP Drive</a>
+            <a href="{% url 'myApp:run_script' %}">SHEET BACKUP</a> 
             {% endif %}
             <a href="{% url 'myApp:login' %}">LOGOUT</a>
           </div>
@@ -109,10 +110,6 @@
             <h3 style="font-family: 'Times New Roman', serif;">OTHERS</h3>
             <p id="others-count"><strong>{{ total_count.Others|default:"0" }}</strong></p>
           </div>
-          <div class="card">
-            <h3 style="font-family: 'Times New Roman', serif;">PAID LEAVE</h3>
-            <p id="total-count"><strong>{{ total_count.Paid_leave|default:"0" }}</strong></p>
-        </div>
       </div>
     </section>
   </div>

@@ -31,6 +31,12 @@ class AttendanceForm(forms.ModelForm):
         ('Leave', 'Leave'),
         ('Others', 'Others')
     ])
+    location = forms.CharField(
+        max_length=100,
+        required=False,
+        help_text="Location where the attendance is marked",
+        widget=forms.TextInput(attrs={'class': 'location-suggest'})
+    )
 
 from django import forms
 

@@ -663,14 +663,16 @@ def attendance_view(request):
         staff_list = Staff.objects.all()  # Fetch all staff members
         for staff in staff_list:
             attendance_type = request.POST.get(f'attendance_type_{staff.id_no}')
+            location = request.POST.get(f'location_{staff.id_no}')  # Get location from the form
             if attendance_type:
                 attendance, created = Attendance.objects.get_or_create(
                     staff=staff,
                     attendance_date=attendance_date,
-                    defaults={'attendance_type': attendance_type}
+                    defaults={'attendance_type': attendance_type, 'location': location}
                 )
                 if not created:
                     attendance.attendance_type = attendance_type
+                    attendance.location = location  # Update location if attendance already exists
                     attendance.save()
 
         messages.success(request, 'Attendance recorded successfully!')
@@ -839,7 +841,7 @@ def staff_attendance_view(request):
 
         # Prepare attendance data
         attendance_data = [
-            {'date': record.attendance_date, 'work_mode': record.attendance_type}
+            {'date': record.attendance_date, 'work_mode': record.attendance_type,'location':record.location}
             for record in attendance_records
         ]
 

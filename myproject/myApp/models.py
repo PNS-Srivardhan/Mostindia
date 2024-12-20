@@ -81,6 +81,12 @@ class Attendance(models.Model):
             ('Paid_Leave', 'Paid_Leave'),
         ]
     )
+    location = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True, 
+        help_text="Location where the attendance is marked"
+    )
     other_attendance_type = models.CharField(
         max_length=50, 
         blank=True, 

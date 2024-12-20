@@ -611,14 +611,22 @@ def leave_limit(request):
     # Count the leave for every staff member
     leave_counts = Attendance.objects.filter(attendance_type='Leave', attendance_date__year=current_year).values('staff__id_no').annotate(total_leaves=Count('attendance_type'))
 
+    # Calculate the number of Paid_leave days for each staff member
+    paid_leave_counts = Attendance.objects.filter(attendance_type='Paid_leave', attendance_date__year=current_year).values('staff__id_no').annotate(total_paid_leaves=Count('attendance_type'))
+
+    # Create a dictionary to map staff id_no to their paid leave count
+    paid_leave_count_dict = {item['staff__id_no']: item['total_paid_leaves'] for item in paid_leave_counts}
+
     # Create a dictionary to map staff id_no to their leave count
     leave_count_dict = {item['staff__id_no']: item['total_leaves'] for item in leave_counts}
 
     # Add leave count and remaining leaves to each staff member in the staff_list
     for staff in staff_list:
         leave_count = leave_count_dict.get(staff['id_no'], 0)
+        paid_leave_count = paid_leave_count_dict.get(staff['id_no'], 0)
         staff['leave_count'] = leave_count
-        staff['remainingleaves'] = staff['totalleaves'] - leave_count
+        staff['paid_leave'] = paid_leave_count
+        staff['remainingleaves'] = staff['totalleaves'] - leave_count - paid_leave_count
 
     return render(request, 'myApp/leave_limit.html', {'staff_list': staff_list})
 
